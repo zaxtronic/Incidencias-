@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es" data-bs-theme="dark"> <!-- Forzamos tema oscuro de Bootstrap como base -->
+<html lang="es" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Incidencias - IES Moderno</title>
+    <title>Gestión de Incidencias (JSON) - IES Moderno</title>
 
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,10 +13,10 @@
     <!-- Material Icons Outlined -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 
-    <!-- Bootstrap CSS (Usaremos variables de Bootstrap y las sobrescribiremos) -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
-    <!-- Nuestro CSS Personalizado (¡DESPUÉS de Bootstrap!) -->
+    <!-- Nuestro CSS Personalizado -->
     <link rel="stylesheet" href="style.css">
 
 </head>
@@ -29,7 +29,6 @@
                 <span class="fw-bold">Gestión Incidencias</span>
                 <span class="badge bg-primary-subtle text-primary-emphasis rounded-pill ms-2 fs- Mz">IES Moderno</span>
             </a>
-            <!-- Podríamos añadir más elementos al navbar si fuera necesario -->
         </nav>
     </header>
 
@@ -46,15 +45,18 @@
                         </h2>
                     </div>
                     <div class="card-body d-flex flex-column">
+                        <!-- El ID del formulario es importante -->
                         <form id="form-incidencia" class="flex-grow-1">
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <label for="reportador" class="form-label form-label-sm">Tu Nombre</label>
-                                    <input type="text" class="form-control form-control-sm" id="reportador" required placeholder="Nombre Apellido">
+                                    <!-- NAME AÑADIDO/VERIFICADO -->
+                                    <input type="text" class="form-control form-control-sm" id="reportador" name="reportador" required placeholder="Nombre Apellido">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="rol" class="form-label form-label-sm">Tu Rol</label>
-                                    <select class="form-select form-select-sm" id="rol" required>
+                                    <!-- NAME AÑADIDO/VERIFICADO -->
+                                    <select class="form-select form-select-sm" id="rol" name="rol" required>
                                         <option value="" disabled selected>Selecciona...</option>
                                         <option value="alumno">Alumno/a</option>
                                         <option value="profesor">Profesor/a</option>
@@ -63,19 +65,23 @@
                                 </div>
                                 <div class="col-md-7">
                                     <label for="ubicacion" class="form-label form-label-sm">Ubicación</label>
-                                    <input type="text" class="form-control form-control-sm" id="ubicacion" required placeholder="Aula, Despacho...">
+                                     <!-- NAME AÑADIDO/VERIFICADO -->
+                                    <input type="text" class="form-control form-control-sm" id="ubicacion" name="ubicacion" required placeholder="Aula, Despacho...">
                                 </div>
                                 <div class="col-md-5">
                                     <label for="equipo" class="form-label form-label-sm">Equipo (Opcional)</label>
-                                    <input type="text" class="form-control form-control-sm" id="equipo" placeholder="ID Equipo">
+                                    <!-- NAME AÑADIDO/VERIFICADO -->
+                                    <input type="text" class="form-control form-control-sm" id="equipo" name="equipo" placeholder="ID Equipo">
                                 </div>
                                 <div class="col-12">
                                     <label for="descripcion" class="form-label form-label-sm">Descripción del Problema</label>
-                                    <textarea class="form-control form-control-sm" id="descripcion" rows="5" required placeholder="Detalla el problema aquí..."></textarea>
+                                    <!-- NAME AÑADIDO/VERIFICADO -->
+                                    <textarea class="form-control form-control-sm" id="descripcion" name="descripcion" rows="5" required placeholder="Detalla el problema aquí..."></textarea>
                                 </div>
                                 <div class="col-12">
                                     <label class="form-label form-label-sm d-block mb-1">Prioridad</label>
                                     <div class="btn-group w-100" role="group" aria-label="Selector de Prioridad">
+                                        <!-- NAME AÑADIDO/VERIFICADO EN TODOS LOS RADIOS -->
                                         <input type="radio" class="btn-check" name="prioridad" id="prioridad-baja" value="baja" autocomplete="off" checked>
                                         <label class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center" for="prioridad-baja"><span class="material-icons-outlined sm-icon me-1">arrow_downward</span>Baja</label>
 
@@ -103,16 +109,26 @@
             <!-- Columna Listado -->
             <div class="col-lg-7">
                 <section id="listado-incidencias" class="card modern-card h-100">
-                     <div class="card-header">
+                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h2 class="card-title h5 mb-0 d-flex align-items-center">
                              <span class="material-icons-outlined me-2 text-primary">list_alt</span>
                              Listado de Incidencias
                         </h2>
+                        <!-- Botones JSON -->
+                        <div class="btn-group btn-group-sm" role="group" aria-label="Acciones JSON">
+                            <button type="button" class="btn btn-outline-success d-flex align-items-center" id="btn-save-json">
+                                <span class="material-icons-outlined sm-icon me-1">download</span> Guardar
+                            </button>
+                            <button type="button" class="btn btn-outline-info d-flex align-items-center" id="btn-trigger-load-json">
+                                <span class="material-icons-outlined sm-icon me-1">upload</span> Cargar
+                            </button>
+                            <input type="file" id="input-load-json" accept=".json" style="display: none;">
+                        </div>
                     </div>
                     <div class="card-body d-flex flex-column">
                         <!-- Filtros y Búsqueda -->
                         <div class="filters-toolbar row g-2 mb-3">
-                            <div class="col-md-5">
+                           <div class="col-md-5">
                                 <div class="input-group input-group-sm">
                                      <span class="input-group-text"><span class="material-icons-outlined">search</span></span>
                                      <input type="search" id="input-busqueda" class="form-control form-control-sm" placeholder="Buscar...">
@@ -137,14 +153,13 @@
 
                         <!-- Contenedor Lista Incidencias -->
                         <div id="incidencias-container" class="list-group list-group-flush flex-grow-1 overflow-auto list-container">
-                            <!-- Incidencias dinámicas aquí -->
                             <div class="placeholder-incidencias text-center text-body-secondary p-4">
-                                <span class="material-icons-outlined fs-1 mb-2">upcoming</span>
-                                <p class="mb-0">No hay incidencias que mostrar.</p>
+                                <span class="material-icons-outlined fs-1 mb-2">file_upload</span>
+                                <p class="mb-0">Carga un archivo JSON o reporta una nueva incidencia.</p>
                             </div>
                         </div>
                          <div id="contador-incidencias" class="text-end text-body-secondary small mt-2 border-top pt-2">
-                            Cargando...
+                            0 incidencias cargadas
                          </div>
                     </div>
                 </section>
@@ -152,13 +167,13 @@
         </div>
     </main>
 
-    <footer class="app-footer mt-auto py-2">
+     <footer class="app-footer mt-auto py-2">
         <div class="container text-center">
             <p class="text-body-secondary small mb-0">© 2023 Sistema de Incidencias - Desarrollado con <span class="material-icons-outlined text-danger sm-icon">favorite</span></p>
         </div>
     </footer>
 
-    <!-- Modal para Ver Detalles -->
+    <!-- Modal (sin cambios respecto a la versión anterior) -->
     <div class="modal fade" id="modalDetallesIncidencia" tabindex="-1" aria-labelledby="modalDetallesLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content modern-modal">
@@ -169,12 +184,10 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <!-- Contenido dinámico -->
             <div id="modal-body-content">
                 <div class="text-center p-4"><div class="spinner-border spinner-border-sm" role="status"><span class="visually-hidden">Cargando...</span></div></div>
             </div>
             <hr class="my-3">
-            <!-- Acciones dentro del modal -->
             <div class="row g-2 align-items-center">
                 <div class="col-sm-4">
                      <label for="modal-cambiar-estado" class="form-label form-label-sm mb-0">Cambiar Estado:</label>
@@ -186,7 +199,6 @@
                         <option value="resuelta">Resuelta</option>
                     </select>
                 </div>
-                 <!-- Podríamos añadir más acciones o campos editables aquí -->
             </div>
           </div>
           <div class="modal-footer justify-content-between">
@@ -204,9 +216,8 @@
       </div>
     </div>
 
-    <!-- Bootstrap Bundle with Popper -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <!-- Nuestro JS (sin cambios mayores en lógica, adaptado a clases si es necesario) -->
     <script src="script.js"></script>
 </body>
 </html>
