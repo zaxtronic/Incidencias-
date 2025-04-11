@@ -1,0 +1,314 @@
+/* --- Variables y Tema Base (Refinado Dark) --- */
+:root {
+    /* Paleta Principal (Adaptada de Bootstrap Dark con ajustes) */
+    --bs-body-bg: #1a1d21; /* Gris muy oscuro, no negro */
+    --bs-body-color: #e9ecef; /* Texto principal claro */
+    --bs-secondary-bg: #2c3036; /* Fondo secundario (cards, inputs) */
+    --bs-tertiary-bg: #212529; /* Ligeramente más oscuro */
+    --bs-border-color: rgba(255, 255, 255, 0.15);
+    --bs-primary: #007bff; /* Azul primario de Bootstrap (podría cambiarse) */
+    --bs-primary-rgb: 0, 123, 255;
+    --bs-primary-subtle: #0d2f52; /* Fondo sutil para badges */
+    --bs-primary-emphasis: #66b0ff; /* Texto enfático primario */
+
+    /* Colores de Estado/Prioridad Semánticos */
+    --color-success: var(--bs-success);
+    --color-warning: var(--bs-warning);
+    --color-danger: var(--bs-danger);
+    --color-info: var(--bs-info);
+    --color-muted: var(--bs-secondary); /* Para prioridad baja */
+
+    /* Tipografía */
+    --bs-body-font-family: 'Inter', sans-serif;
+    --bs-body-font-size: 0.95rem;
+    --bs-body-line-height: 1.6;
+
+    /* Otros */
+    --card-border-radius: 0.5rem;
+    --transition-main: 0.2s ease-in-out;
+    --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Estilos Globales y Helpers --- */
+body {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+    font-family: var(--bs-body-font-family);
+    font-size: var(--bs-body-font-size);
+    line-height: var(--bs-body-line-height);
+    padding-top: 56px; /* Ajustar al tamaño del header */
+}
+
+.sm-icon {
+    font-size: 1.1em; /* Tamaño base para iconos pequeños */
+    vertical-align: text-bottom; /* Alinear mejor con texto */
+}
+
+/* --- Header --- */
+.app-header {
+    background-color: var(--bs-tertiary-bg);
+    border-bottom: 1px solid var(--bs-border-color);
+}
+.app-header .navbar-brand {
+    color: var(--bs-body-color);
+    font-size: 1.1rem;
+}
+.app-header .header-icon {
+    color: var(--bs-primary);
+    font-size: 1.6em;
+}
+.app-header .badge {
+    font-weight: 500;
+}
+
+/* --- Tarjetas Modernas --- */
+.modern-card {
+    background-color: var(--bs-secondary-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow var(--transition-main);
+}
+.modern-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.modern-card .card-header {
+    background-color: rgba(0,0,0,0.1); /* Sutilmente diferente */
+    border-bottom: 1px solid var(--bs-border-color);
+    padding: 0.75rem 1rem;
+}
+.modern-card .card-header .card-title {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.modern-card .card-body {
+    padding: 1rem;
+    /* Permitir que el contenido crezca */
+}
+
+/* --- Formularios --- */
+/* Usar form-control-sm y form-select-sm de Bootstrap por defecto */
+.form-label-sm {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--bs-secondary-color); /* Más suave */
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Mejorar btn-group para prioridad */
+.btn-group .btn {
+    border-color: var(--bs-border-color); /* Borde coherente */
+    transition: background-color var(--transition-main), border-color var(--transition-main);
+}
+/* Estilos para botones de prioridad cuando están activos (checked) */
+.btn-check:checked + .btn-outline-secondary { background-color: var(--bs-gray-600); border-color: var(--bs-gray-600); color: white;}
+.btn-check:checked + .btn-outline-primary { background-color: var(--bs-primary); border-color: var(--bs-primary); color: white;}
+.btn-check:checked + .btn-outline-warning { background-color: var(--bs-warning); border-color: var(--bs-warning); color: var(--bs-dark); }
+.btn-check:checked + .btn-outline-danger { background-color: var(--bs-danger); border-color: var(--bs-danger); color: white;}
+
+
+/* --- Listado de Incidencias --- */
+.filters-toolbar .input-group-text {
+    background-color: var(--bs-tertiary-bg);
+    border-color: var(--bs-border-color);
+    color: var(--bs-secondary-color);
+}
+.filters-toolbar .form-control,
+.filters-toolbar .form-select {
+    background-color: var(--bs-tertiary-bg);
+    border-color: var(--bs-border-color);
+}
+.filters-toolbar .form-control:focus,
+.filters-toolbar .form-select:focus {
+     border-color: var(--bs-primary);
+     box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+.list-container {
+    max-height: 60vh; /* Limitar altura para scroll */
+     padding-right: 5px; /* Espacio para scrollbar */
+}
+
+/* Estilo de cada item en la lista */
+.list-group-item {
+    background-color: transparent; /* Fondo de la tarjeta */
+    border: none;
+    border-bottom: 1px solid var(--bs-border-color);
+    padding: 0.8rem 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 6px;
+    transition: background-color var(--transition-main);
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.4s ease-out forwards;
+}
+
+.list-group-item:last-child {
+    border-bottom: none;
+}
+
+.list-group-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+}
+
+.incidencia-item-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--bs-body-color);
+    margin-bottom: 0.2rem;
+    display: block; /* Para que el span de prioridad flote bien */
+}
+.incidencia-item-title .material-icons-outlined {
+    font-size: 1em;
+    margin-right: 0.25rem;
+    color: var(--bs-primary);
+}
+
+.incidencia-item-meta {
+    font-size: 0.8rem;
+    color: var(--bs-secondary-color); /* Gris claro */
+}
+.incidencia-item-meta strong {
+    color: var(--bs-body-secondary); /* Ligeramente más oscuro que el texto normal */
+}
+.incidencia-item-meta .meta-divider::before {
+    content: "•";
+    margin: 0 0.5rem;
+    color: var(--bs-secondary-color);
+}
+
+
+/* Indicadores de Prioridad y Estado (Sutiles) */
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 0.4rem;
+    vertical-align: middle;
+}
+.status-nueva { background-color: var(--bs-primary); }
+.status-en_proceso { background-color: var(--bs-info); }
+.status-resuelta { background-color: var(--bs-success); }
+
+.priority-indicator {
+    font-weight: 600;
+    padding: 0.1rem 0.4rem;
+    font-size: 0.7rem;
+    border-radius: 4px;
+    margin-left: 0.5rem; /* Espacio respecto al título */
+    vertical-align: middle;
+    float: right; /* Alinear a la derecha */
+}
+.priority-baja { color: var(--bs-secondary-color); border: 1px solid var(--bs-secondary-color); }
+.priority-media { color: var(--bs-primary); border: 1px solid var(--bs-primary); }
+.priority-alta { color: var(--bs-warning); border: 1px solid var(--bs-warning); }
+.priority-critica { color: var(--bs-danger); border: 1px solid var(--bs-danger); background-color: rgba(var(--bs-danger-rgb), 0.1);}
+
+
+.placeholder-incidencias {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+     justify-content: center;
+     height: 100%; /* Ocupar espacio si está vacío */
+     min-height: 200px;
+}
+
+/* --- Modal Moderno --- */
+.modern-modal .modal-content {
+    background-color: var(--bs-secondary-bg);
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--shadow-soft);
+}
+.modern-modal .modal-header {
+    background-color: rgba(0,0,0,0.1);
+    border-bottom: 1px solid var(--bs-border-color);
+    padding: 0.75rem 1rem;
+}
+.modern-modal .modal-title {
+     font-weight: 600;
+     font-size: 1rem;
+}
+.modern-modal .modal-body {
+    padding: 1rem 1.2rem;
+}
+.modern-modal .modal-footer {
+    background-color: rgba(0,0,0,0.1);
+    border-top: 1px solid var(--bs-border-color);
+    padding: 0.75rem 1rem;
+}
+
+/* Estilos para detalles dentro del modal */
+.detail-item {
+    margin-bottom: 0.8rem;
+}
+.detail-item .detail-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--bs-secondary-color);
+    display: block;
+    margin-bottom: 0.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.detail-item .detail-value {
+    font-size: 0.95rem;
+    color: var(--bs-body-color);
+}
+.detail-item .badge { /* Para estado/prioridad dentro del modal */
+     font-size: 0.85rem;
+     padding: 0.4em 0.7em;
+}
+.modal-descripcion-full {
+    background-color: var(--bs-tertiary-bg);
+    padding: 0.8rem;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid var(--bs-border-color);
+    white-space: pre-wrap; /* Conservar saltos de línea */
+}
+
+
+/* --- Footer --- */
+.app-footer {
+    background-color: var(--bs-tertiary-bg);
+    border-top: 1px solid var(--bs-border-color);
+}
+
+/* --- Animaciones Sutiles --- */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Retraso escalonado para la animación */
+.list-group-item:nth-child(1) { animation-delay: 0.05s; }
+.list-group-item:nth-child(2) { animation-delay: 0.1s; }
+.list-group-item:nth-child(3) { animation-delay: 0.15s; }
+/* ... etc */
+
+
+/* --- Feedback (Alertas Bootstrap) --- */
+/* No necesitamos mucho CSS extra si usamos bien las clases de Bootstrap */
+#feedback-mensaje .alert {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    margin-bottom: 0; /* Resetear margen si está dentro de un contenedor */
+}
