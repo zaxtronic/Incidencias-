@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Gestión de Incidencias</title>
+
+    <!-- Stylesheets -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        html, body { height: 100%; }
+        body { display: flex; align-items: center; justify-content: center; padding-top: 40px; padding-bottom: 40px; background-color: var(--bs-dark-bg-subtle);}
+        .register-container { max-width: 450px; width: 100%; }
+    </style>
+</head>
+<body class="bg-body-tertiary">
+
+    <main class="register-container p-4">
+        <div class="card modern-card shadow">
+            <div class="card-body p-4 p-lg-5">
+                 <div class="text-center mb-4">
+                     <span class="material-icons-outlined header-icon me-2 fs-1 text-primary">laptop_chromebook</span>
+                     <h1 class="h3 fw-bold mb-0">Gestión Incidencias</h1>
+                     <p class="text-body-secondary">IES Pedralbes</p>
+                </div>
+                <!-- Título más genérico -->
+                <h2 class="h5 text-center mb-4">Crear Nueva Cuenta</h2>
+
+                <form id="register-form">
+                     <div class="mb-3">
+                        <label for="reg-name" class="form-label form-label-sm">Nombre Completo</label>
+                        <input type="text" class="form-control form-control-sm" id="reg-name" required placeholder="Tu Nombre Apellido">
+                    </div>
+                    <div class="mb-3">
+                        <!-- Label y Placeholder más genéricos -->
+                        <label for="reg-email" class="form-label form-label-sm">Correo Electrónico</label>
+                        <input type="email" class="form-control form-control-sm" id="reg-email" required placeholder="tu.correo@dominio.cat">
+                        <!-- Texto de ayuda actualizado -->
+                        <div class="form-text form-text-sm">Usa un correo de dominio permitido (@inspedralbes.cat, @administradorinfo.cat, @tecnicoinfo.cat).</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="reg-password" class="form-label form-label-sm">Contraseña</label>
+                        <input type="password" class="form-control form-control-sm" id="reg-password" required placeholder="Mínimo 6 caracteres">
+                    </div>
+                    <div class="mb-3">
+                        <label for="reg-confirm-password" class="form-label form-label-sm">Confirmar Contraseña</label>
+                        <input type="password" class="form-control form-control-sm" id="reg-confirm-password" required placeholder="Repite la contraseña">
+                    </div>
+                    <!-- Rol se asigna automáticamente -->
+                    <button type="submit" class="btn btn-success w-100">
+                        <span class="material-icons-outlined sm-icon me-1">person_add</span> Registrarse
+                    </button>
+
+                    <div id="register-feedback" class="small mt-3 text-center"></div>
+
+                     <div class="text-center mt-3">
+                        <a href="index.html" class="link-secondary small">¿Ya tienes cuenta? Iniciar Sesión</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+         <footer class="app-footer mt-4 py-2">
+            <div class="container text-center">
+                <p class="text-body-secondary small mb-0">© 2023 Sistema de Incidencias</p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <!-- Asegúrate que js/register.js es la versión CORREGIDA que te pasé antes -->
+    <script src="js/register.js"></script>
+</body>
+</html>

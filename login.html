@@ -20,8 +20,9 @@
     <link rel="stylesheet" href="style.css">
 
     <style>
+        /* Simple centering for login form */
         html, body { height: 100%; }
-        body { display: flex; align-items: center; justify-content: center; padding-top: 40px; padding-bottom: 40px; background-color: var(--bs-dark-bg-subtle);} /* Estilo para centrar */
+        body { display: flex; align-items: center; justify-content: center; }
         .login-container { max-width: 400px; width: 100%; }
     </style>
 </head>
@@ -33,14 +34,14 @@
                 <div class="text-center mb-4">
                      <span class="material-icons-outlined header-icon me-2 fs-1 text-primary">laptop_chromebook</span>
                      <h1 class="h3 fw-bold mb-0">Gestión Incidencias</h1>
-                     <p class="text-body-secondary">IES Pedralbes</p>
+                     <p class="text-body-secondary">IES Moderno</p>
                 </div>
                 <h2 class="h5 text-center mb-4">Iniciar Sesión</h2>
 
                 <form id="login-form">
                     <div class="mb-3">
-                        <label for="email" class="form-label form-label-sm">Correo Electrónico</label>
-                        <input type="email" class="form-control form-control-sm" id="email" required placeholder="Introduce tu correo electrónico">
+                        <label for="username" class="form-label form-label-sm">Usuario</label>
+                        <input type="text" class="form-control form-control-sm" id="username" required placeholder="Nombre de usuario">
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label form-label-sm">Contraseña</label>
@@ -50,10 +51,6 @@
                         <span class="material-icons-outlined sm-icon me-1">login</span> Entrar
                     </button>
                     <div id="login-error" class="text-danger small mt-3 text-center"></div>
-
-                    <div class="text-center mt-3">
-                        <a href="register.html" class="link-secondary small">¿No tienes cuenta (@inspedralbes.cat)? Regístrate</a>
-                    </div>
                 </form>
             </div>
         </div>

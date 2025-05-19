@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ADMIN - Gestión Incidencias</title>
+
+    <!-- Stylesheets -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Script de autenticación -->
+    <script src="js/auth.js"></script>
+
+    <header class="app-header sticky-top shadow-sm">
+        <nav class="container-fluid navbar navbar-expand">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <span class="material-icons-outlined header-icon me-2">laptop_chromebook</span>
+                <span class="fw-bold">Gestión Incidencias</span>
+                <span class="badge bg-danger-subtle text-danger-emphasis rounded-pill ms-2 fs-Mz">ADMIN</span>
+            </a>
+            <div class="ms-auto d-flex align-items-center">
+                 <span id="welcome-user" class="navbar-text me-3 small text-body-secondary"></span>
+                 <button class="btn btn-sm btn-outline-secondary d-flex align-items-center" onclick="logout()">
+                     <span class="material-icons-outlined sm-icon me-1">logout</span> Salir
+                 </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mt-4 mb-5">
+        <div id="global-feedback-area" class="mb-3"></div>
+        <div class="row g-4">
+            <!-- Columna Listado (Ocupa todo el ancho) -->
+            <div class="col-lg-12">
+                <section id="listado-incidencias" class="card modern-card h-100">
+                     <div class="card-header d-flex justify-content-between align-items-center">
+                        <h2 class="card-title h5 mb-0 d-flex align-items-center"><span class="material-icons-outlined me-2 text-primary">list_alt</span>Listado Incidencias</h2>
+                        <div class="btn-group btn-group-sm"><button type="button" class="btn btn-outline-success d-flex align-items-center" id="btn-save-json"><span class="material-icons-outlined sm-icon">download</span></button><button type="button" class="btn btn-outline-info d-flex align-items-center" id="btn-trigger-load-json"><span class="material-icons-outlined sm-icon">upload</span></button><input type="file" id="input-load-json" accept=".json" style="display: none;"></div>
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <!-- Filtros -->
+                        <div class="filters-toolbar row g-2 mb-3 align-items-center">
+                           <div class="col-md-5"><div class="input-group input-group-sm"><span class="input-group-text"><i class="material-icons-outlined">search</i></span><input type="search" id="input-busqueda" class="form-control form-control-sm" placeholder="Buscar..."></div></div>
+                            <div class="col-md-4 col-6">
+                                <select id="filtro-estado" class="form-select form-select-sm">
+                                    <option value="todas" selected>Estado: Todas</option> <!-- Todas por defecto -->
+                                    <option value="nueva">Nuevas</option>
+                                    <option value="asignada">Asignadas</option>
+                                    <option value="en_proceso">En Proceso</option>
+                                    <option value="resuelta">Resueltas</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 col-6"><select id="ordenar-por" class="form-select form-select-sm"><option value="fecha_desc">Recientes</option><option value="fecha_asc">Antiguas</option><option value="prioridad">Prioridad</option></select></div>
+                        </div>
+                        <!-- Lista -->
+                        <div id="incidencias-container" class="list-group list-group-flush flex-grow-1 overflow-auto list-container"><div class="placeholder-incidencias text-center p-4"><span class="material-icons-outlined fs-1">inventory_2</span><p>No hay incidencias.</p></div></div>
+                        <div id="contador-incidencias" class="text-end small mt-2 pt-2 border-top">0 incidencias</div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="app-footer mt-auto py-2"><div class="container text-center"><p class="text-body-secondary small mb-0">© 2023 Sistema Incidencias</p></div></footer>
+
+    <!-- Modal Detalles/Asignación/Edición -->
+    <div class="modal fade" id="modalDetallesIncidencia" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content modern-modal">
+          <div class="modal-header"><h5 class="modal-title h6 d-flex align-items-center"><span class="material-icons-outlined me-2">edit_note</span>Detalles y Gestión de Incidencia</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+          <div class="modal-body">
+                <div id="modal-body-content"><div class="text-center p-4"><div class="spinner-border spinner-border-sm"></div></div></div>
+                <hr class="my-3">
+                <!-- Controles de Admin -->
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label form-label-sm d-block mb-1">Prioridad</label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="modal-prioridad" id="modal-p-b" value="baja"><label class="btn btn-sm btn-outline-secondary d-flex align-items-center justify-content-center" for="modal-p-b">Baja</label>
+                            <input type="radio" class="btn-check" name="modal-prioridad" id="modal-p-m" value="media"><label class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center" for="modal-p-m">Media</label>
+                            <input type="radio" class="btn-check" name="modal-prioridad" id="modal-p-a" value="alta"><label class="btn btn-sm btn-outline-warning d-flex align-items-center justify-content-center" for="modal-p-a">Alta</label>
+                            <input type="radio" class="btn-check" name="modal-prioridad" id="modal-p-c" value="critica"><label class="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center" for="modal-p-c">Crítica</label>
+                        </div>
+                         <div class="form-text form-text-sm">Prioridad actual marcada. Selecciona una para asignar/cambiar.</div>
+                    </div>
+                     <div class="col-md-6">
+                        <label for="modal-cambiar-estado" class="form-label form-label-sm mb-1">Estado</label>
+                        <select id="modal-cambiar-estado" class="form-select form-select-sm">
+                            <option value="nueva">Nueva</option>
+                            <option value="asignada">Asignada</option>
+                            <option value="en_proceso">En Proceso</option>
+                            <option value="resuelta">Resuelta</option>
+                        </select>
+                         <div class="form-text form-text-sm">Estado actual seleccionado. Puedes cambiarlo.</div>
+                    </div>
+                    <div class="col-12">
+                        <label for="modal-asignar-tecnico" class="form-label form-label-sm mb-1">Técnico Asignado</label>
+                        <select id="modal-asignar-tecnico" class="form-select form-select-sm">
+                            <option value="">-- Sin asignar --</option>
+                            <!-- Opciones de técnicos -->
+                        </select>
+                        <div class="form-text form-text-sm">Selecciona un técnico para asignar/reasignar.</div>
+                    </div>
+                </div>
+          </div>
+          <div class="modal-footer justify-content-between">
+             <button type="button" class="btn btn-sm btn-outline-danger d-flex align-items-center" id="modal-eliminar-incidencia"><span class="material-icons-outlined sm-icon">delete</span> Eliminar</button>
+             <div><button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Cancelar</button><button type="button" class="btn btn-sm btn-primary" id="modal-guardar-cambios"><span class="material-icons-outlined sm-icon">save</span> Guardar Cambios</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script src="js/admin.js"></script> <!-- Asegúrate que admin.js se actualice -->
+</body>
+</html>
