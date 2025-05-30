@@ -1,0 +1,589 @@
+
+DOCUMENTACIÓ COMPLETA DEL PROJECTE: GESTIÓ D'INCIDÈNCIES INFORMÀTIQUES
+
+ÍNDEX
+
+Introducció i Visió General del Projecte
+1.1. Objectiu del Projecte
+1.2. Abast del Projecte
+1.3. Actors Principals i Rols
+1.4. Tecnologies Clau
+
+Gestió del Projecte (Metodologia SCRUM)
+2.1. Eines de Gestió
+2.2. Rols SCRUM
+2.3. Artefactes SCRUM
+2.4. Esdeveniments SCRUM
+2.5. Backlog del Producte Detallat (User Stories)
+2.6. Planificació de Sprints (Proposta Inicial)
+2.7. Control de Versions (Git i GitHub)
+
+Anàlisi i Disseny del Sistema
+3.1. Diagrama de Casos d'Ús
+3.2. Disseny Conceptual de la Base de Dades (Model Entitat-Relació)
+3.3. Transformació a Model Relacional (Esquema Lògic)
+3.4. Disseny de la Base de Dades NoSQL (MongoDB per a Logs)
+3.5. Arquitectura de l'Aplicació
+3.6. Disseny de la Interfície d'Usuari (Wireframes/Prototips)
+
+Desenvolupament del Backend
+4.1. Configuració de l'Entorn de Desenvolupament
+4.2. Models de Dades amb l'ORM (Sequelize)
+4.3. API RESTful: Endpoints i Lògica de Negoci
+4.4. Implementació de Consultes Específiques
+4.5. Gestió de Logs amb MongoDB
+4.6. Autenticació i Autorització (Funcionalitat Extra)
+
+Desenvolupament del Frontend
+5.1. Estructura HTML5 Semàntica
+5.2. Estilització amb CSS i Bootstrap
+5.3. Interactivitat amb JavaScript
+5.4. Comunicació amb el Backend (API Calls)
+
+Càrrega de Dades de Mostra
+6.1. Scripts de Càrrega Inicial (Seeders)
+6.2. Dades d'Exemple Detallades
+
+Proves i Qualitat
+7.1. Estratègia de Proves
+7.2. Proves Unitàries
+7.3. Proves d'Integració
+7.4. Proves d'Usuari (UAT)
+
+Desplegament
+8.1. Configuració del Servidor
+8.2. Procés de Desplegament
+
+Documentació Addicional
+9.1. README.md del Repositori
+9.2. Documentació del Codi (JSDoc / PHPDoc)
+
+Conclusions i Treballs Futurs
+
+1. Introducció i Visió General del Projecte
+
+1.1. Objectiu del Projecte
+L'objectiu principal d'aquest projecte és desenvolupar una aplicació web robusta i eficient per al registre, seguiment i gestió d'incidències informàtiques dins d'una organització. L'aplicació facilitarà la comunicació entre els usuaris que reporten problemes i l'equip tècnic encarregat de resoldre'ls, optimitzant el flux de treball i proporcionant visibilitat sobre l'estat de les incidències.
+
+1.2. Abast del Projecte
+L'aplicació permetrà:
+
+Als usuaris de qualsevol departament registrar noves incidències.
+
+Al responsable informàtic revisar, classificar, prioritzar i assignar incidències als tècnics.
+
+Als tècnics registrar les actuacions realitzades per resoldre les incidències i marcar-les com a resoltes.
+
+Als usuaris consultar l'estat de les seves incidències (només actuacions visibles).
+
+Generar informes sobre la càrrega de treball dels tècnics i el consum de recursos per departament.
+
+Registrar i analitzar estadístiques d'accés a l'aplicació per a administradors.
+
+(Extra) Implementar un sistema de login per a tècnics i administradors.
+
+(Extra) Implementar un esdeveniment automàtic per a l'escalada de prioritat d'incidències antigues.
+
+1.3. Actors Principals i Rols
+
+Usuari Reportador (Professor/Empleat de Departament): Qualsevol persona d'un departament que pot obrir una incidència. Accedeix a funcionalitats de registre i consulta de les seves pròpies incidències.
+
+Responsable Informàtic (Administrador): Gestiona el cicle de vida de les incidències (revisió, classificació, assignació, priorització). Accedeix a informes, estadístiques d'accés i pot tenir permisos de modificació ampliats. Pot ser el rol que també gestioni els usuaris del sistema.
+
+Tècnic Informàtic: Rep incidències assignades, registra actuacions i marca incidències com a resoltes. Pot veure les seves incidències assignades.
+
+Administrador del Sistema (pot coincidir amb Responsable Informàtic): Té accés a la configuració dels logs i a la visualització de les estadístiques d'ús de l'aplicació.
+
+1.4. Tecnologies Clau
+
+Backend: Node.js amb Express.js (o un altre llenguatge/framework com PHP amb Laravel/Symfony).
+
+Base de Dades Relacional: PostgreSQL o MySQL.
+
+ORM: Sequelize (per Node.js) o un equivalent (Eloquent per Laravel, Doctrine per Symfony).
+
+Base de Dades NoSQL: MongoDB (Atlas) per al registre de logs d'accés.
+
+Frontend: HTML5, CSS3, JavaScript, Bootstrap 5.
+
+Gestió de Projecte: Taiga.io.
+
+Control de Versions: Git i GitHub.
+
+Prototipatge: Figma (o similar).
+
+Documentació de Codi: JSDoc (per JavaScript/Node.js) o PHPDoc (per PHP).
+
+2. Gestió del Projecte (Metodologia SCRUM)
+
+2.1. Eines de Gestió
+
+Taiga.io: Plataforma central per a la gestió àgil: Product Backlog, planificació de Sprints, gestió de tasques, seguiment del progrés (Kanban, burndown charts), documentació de User Stories.
+
+GitHub: Repositori centralitzat per al codi font, documentació i altres actius.
+
+Eina de Comunicació: Principalment Git (commits, pull requests) per a compartir codi. Es podrien usar canals de comunicació ràpida (Discord/Slack) de forma complementària.
+
+2.2. Rols SCRUM
+
+Product Owner (PO): Responsable de definir User Stories, prioritzar el Product Backlog i alinear el desenvolupament amb la visió del producte.
+
+Scrum Master (SM): Facilita els esdeveniments SCRUM, elimina impediments i assegura el seguiment de les pràctiques SCRUM.
+
+Development Team (Equip de Desenvolupament): Responsable de l'anàlisi, disseny, implementació, proves i lliurament de l'increment del producte.
+
+2.3. Artefactes SCRUM
+
+Product Backlog: Llista prioritzada de funcionalitats, millores i requisits en forma de User Stories.
+
+Sprint Backlog: Elements del Product Backlog seleccionats per a un Sprint, més el pla per lliurar-los.
+
+Increment: Suma dels elements del Product Backlog completats, potencialment lliurable.
+
+2.4. Esdeveniments SCRUM
+
+Sprint Planning: Planificació del treball del Sprint, definició de l'objectiu i selecció de User Stories.
+
+Daily Scrum: Reunió diària de sincronització (15 minuts) per planificar les properes 24 hores.
+
+Sprint Review: Presentació de l'increment del producte i recollida de feedback al final del Sprint.
+
+Sprint Retrospective: Reflexió sobre el Sprint passat per identificar millores.
+
+2.5. Backlog del Producte Detallat (User Stories)
+(Format: "Com a <rol>, vull <objectiu/funcionalitat> per a <benefici/raó>.")
+
+SPRINT 0: Investigació, Infraestructura i Planificació
+
+US001: Com a Equip de Desenvolupament, vull configurar el projecte a Taiga per a gestionar les tasques i el progrés.
+
+US002: Com a Equip de Desenvolupament, vull dissenyar el model E-R de la base de dades per a entendre les relacions i assegurar la integritat.
+
+US003: Com a Equip de Desenvolupament, vull crear els scripts SQL per a les taules inicials (Tecnics, Departaments, TipusIncidencies) i omplir-les amb dades de mostra.
+
+US006: Com a Equip de Desenvolupament, vull crear un repositori a GitHub per a col·laborar en el codi.
+
+US007: Com a Equip de Desenvolupament, vull crear un Diagrama de Casos d'Ús per a visualitzar les interaccions.
+
+US008: Com a Equip de Desenvolupament, vull crear wireframes/prototips amb Figma per a definir la navegació i la UI.
+
+SPRINT 1 (Proposta)
+
+US101: Com a Usuari General, vull una pàgina d'inici amb un índex per a navegar fàcilment.
+
+US102: Com a Usuari Reportador, vull registrar una nova incidència mitjançant un formulari web.
+
+Tasca: Crear la taula Incidencies.
+
+Tasca: Dissenyar i implementar el formulari HTML.
+
+Tasca: Connectar la pàgina d'inici amb el formulari.
+
+Tasca: Implementar la lògica de backend per a guardar la nova incidència.
+
+US103: Com a Responsable Informàtic, vull veure un llistat de totes les incidències registrades.
+
+US104: Com a Responsable Informàtic, vull modificar una incidència (prioritat, tipus, tècnic).
+
+Resta del Backlog (a distribuir en futurs Sprints):
+
+US201: Com a Tècnic Informàtic, vull marcar una incidència com a tancada i registrar la data de finalització.
+
+US202: Com a Tècnic Informàtic, vull registrar una nova actuació associada a una incidència (descripció, temps).
+
+US203: Com a Usuari Reportador, vull consultar l'estat de la meva incidència i veure les actuacions visibles.
+
+US301: Com a Usuari General, vull una imatge corporativa consistent i professional (capçaleres, peus, estils responsive).
+
+US302: Com a Responsable Informàtic, vull un llistat d'incidències obertes, ordenades per prioritat i amb indicadors visuals.
+
+US401: Com a Responsable Informàtic, vull un informe de tècnics (incidències no tancades, data inici, temps total, agrupades per prioritat).
+
+US402: Com a Responsable Informàtic, vull un informe de consum per departaments (nombre d'incidències, temps total).
+
+US501: Com a Usuari General, vull validació de dades en els formularis abans de l'enviament.
+
+US601 (Log): Com a Administrador, vull que l'aplicació registri els accessos a les pàgines per analitzar l'ús.
+
+US602 (Log): Com a Administrador, vull consultar un panell d'estadístiques d'accés (resums, pàgines més visitades, usuaris actius, filtres, gràfics).
+
+US701 (Extra - Login): Com a Tècnic/Responsable, vull iniciar sessió per accedir a funcionalitats restringides.
+
+US702 (Extra - Vista Tècnic): Com a Tècnic autenticat, vull veure un llistat de les meves incidències assignades.
+
+US703 (Extra - Logout): Com a Usuari autenticat, vull poder tancar la sessió.
+
+US704 (Extra - Event): Com a Administrador, vull que el sistema incrementi automàticament la prioritat d'incidències obertes durant més d'una setmana.
+
+2.6. Planificació de Sprints (Proposta Inicial)
+
+Sprint 0 (1 setmana): Configuració, disseny BBDD, repositoris, planificació. Lliurables: E-R, Esquema SQL inicial, Git, Taiga, Casos d'ús, Wireframes.
+
+Sprint 1 (2 setmanes): Funcionalitats bàsiques de registre i consulta d'incidències.
+
+Sprints Subseqüents (2 setmanes cadascun): Selecció de User Stories del Product Backlog segons prioritat.
+
+2.7. Control de Versions (Git i GitHub)
+
+Repositori Únic: A GitHub per a tot el projecte.
+
+Estructura de Branques (Git Flow simplificat):
+
+main (o master): Codi de producció estable.
+
+develop: Branca principal de desenvolupament, integra funcionalitats provades.
+
+feature/<nom-feature>: Branques per a noves funcionalitats, creades des de develop.
+
+hotfix/<nom-hotfix> (opcional): Per a correccions urgents a main.
+
+Flux de Treball: Crear branques feature des de develop, fer commits atòmics, actualitzar regularment amb develop, crear Pull Requests (PR) a develop per a revisió i fusió. Fusionar develop a main per a releases.
+
+Missatges de Commit: Formats consistents (p.ex., feat: US102 Implementa registre incidències).
+
+Compartir Material: Tots els arxius del projecte (codi, dissenys, scripts SQL, etc.) es versionaran exclusivament via Git.
+
+3. Anàlisi i Disseny del Sistema
+
+3.1. Diagrama de Casos d'Ús
+Es crearà un diagrama visual (p.ex., amb draw.io) que il·lustri les interaccions dels actors amb el sistema.
+
+Actors: Usuari Reportador, Responsable Informàtic, Tècnic Informàtic, Sistema (per tasques automàtiques).
+
+Casos d'Ús Principals:
+
+Usuari Reportador: Registrar Nova Incidència, Consultar Estat Incidència Pròpia.
+
+Responsable Informàtic: Revisar Incidències, Assignar Tècnic, Classificar Tipus, Assignar Prioritat, Veure Llistats d'Incidències, Generar Informes (Tècnics, Consum), Consultar Estadístiques d'Accés.
+
+Tècnic Informàtic: Veure Incidències Assignades, Registrar Actuació, Marcar Incidència com Resolta, Iniciar/Tancar Sessió (Extra).
+
+Sistema: Escalar Prioritat d'Incidències Antigues (Extra).
+
+3.2. Disseny Conceptual de la Base de Dades (Model Entitat-Relació - E-R)
+Es crearà un diagrama E-R visual (p.ex., amb Lucidchart, Dia) mostrant les entitats, els seus atributs i les relacions.
+
+Entitats Principals:
+
+Departaments: id_departament (PK), nom_departament, codi_departament.
+
+Usuaris: id_usuari (PK), nom_usuari, contrasenya_hash (si login), nom_complet, email, rol (ENUM: 'reportador', 'tecnic', 'responsable', 'administrador'), id_departament_fk (opcional).
+
+TipusIncidencies: id_tipus_incidencia (PK), nom_tipus, descripcio_tipus.
+
+Incidencies: id_incidencia (PK), id_departament_reporta_fk, nom_reportador_departament (si no hi ha usuari reportador), data_creacio, descripcio_problema, id_tecnic_assignat_fk (FK a Usuaris amb rol 'tecnic'), id_tipus_incidencia_fk, prioritat (ENUM), estat (ENUM), data_resolucio.
+
+Actuacions: id_actuacio (PK), id_incidencia_fk, id_tecnic_realitza_fk (FK a Usuaris amb rol 'tecnic'), data_actuacio, descripcio_actuacio, temps_invertit_minuts, visible_usuari_reportador, incidencia_resolta_amb_actuacio.
+
+Relacions (Cardinalitats):
+
+Departament 1-* Incidencies (reporta).
+
+Usuari (reportador) 1-* Incidencies (obre) (si el reportador és un usuari del sistema).
+
+Usuari (tecnic) 1-* Incidencies (assignat a).
+
+TipusIncidencia 1-* Incidencies (classifica).
+
+Incidencia 1-* Actuacions (pertany a).
+
+Usuari (tecnic) 1-* Actuacions (realitza).
+
+3.3. Transformació a Model Relacional (Esquema Lògic)
+Es definirà l'esquema SQL amb les sentències CREATE TABLE per a cada entitat, incloent:
+
+Taules: Departaments, Usuaris, TipusIncidencies, Incidencies, Actuacions.
+
+Columnes: Amb tipus de dades adequats (SERIAL/INT AUTO_INCREMENT per PKs, VARCHAR, TEXT, TIMESTAMP, ENUM, BOOLEAN, INTEGER).
+
+Claus Primàries (PK): Definides per a cada taula (p.ex., id_departament a Departaments).
+
+Claus Foranes (FK): Per establir relacions (p.ex., Incidencies.id_departament_reporta_fk referenciant Departaments.id_departament). Es definirà el comportament ON DELETE i ON UPDATE (p.ex., RESTRICT, CASCADE).
+
+Restriccions (Constraints): NOT NULL, UNIQUE, DEFAULT, CHECK (p.ex., CHECK (rol IN (...)), CHECK (prioritat IN (...))).
+
+Camps de Timestamp: createdAt i updatedAt per a la majoria de taules, gestionats automàticament per l'ORM o amb valors per defecte a la BBDD.
+
+Índexs: Per a columnes freqüentment usades en cerques o ordenacions (p.ex., Incidencies.estat, Incidencies.prioritat, Incidencies.id_tecnic_assignat_fk) per millorar el rendiment.
+
+Per exemple, la taula Incidencies inclourà:
+id_incidencia (PK), id_departament_reporta_fk (FK a Departaments), nom_reportador_departament (VARCHAR, NOT NULL, per si qui reporta no és un usuari registrat), data_creacio (TIMESTAMP, NOT NULL, DEFAULT CURRENT_TIMESTAMP), descripcio_problema (TEXT, NOT NULL), id_tecnic_assignat_fk (FK a Usuaris on rol='tecnic', NULLABLE), id_tipus_incidencia_fk (FK a TipusIncidencies, NULLABLE), prioritat (VARCHAR/ENUM, CHECK(...), NULLABLE), estat (VARCHAR/ENUM, NOT NULL, DEFAULT 'Nova', CHECK(...)), data_resolucio (TIMESTAMP, NULLABLE).
+
+3.4. Disseny de la Base de Dades NoSQL (MongoDB per a Logs)
+
+Col·lecció: access_logs.
+
+Estructura del Document (exemple):
+
+_id: ObjectId.
+
+timestamp: ISODate (data i hora de l'accés).
+
+url_visitada: String (URL a la qual s'ha accedit).
+
+metode_http: String (GET, POST, etc.).
+
+id_usuari_acces: ObjectId (referència a l'usuari si està autenticat) o String (nom usuari).
+
+nom_usuari_acces: String (nom de l'usuari, si està autenticat).
+
+rol_usuari_acces: String (rol de l'usuari, si està autenticat).
+
+ip_client: String (IP del client).
+
+user_agent: String (informació del navegador del client).
+
+parametres_consulta: Objecte (query params de la URL).
+
+cos_peticio: Objecte (body de la petició, amb precaució de no guardar dades sensibles).
+
+Índexs: Es crearan índexs sobre timestamp, id_usuari_acces, i url_visitada per optimitzar les consultes de filtratge i agregació.
+
+3.5. Arquitectura de l'Aplicació
+Es definirà mitjançant un diagrama d'arquitectura de components.
+
+Client (Navegador): Interfície d'usuari amb HTML/CSS/JS.
+
+Servidor Web (Frontend): Serveix els arxius estàtics del frontend.
+
+API Backend (Node.js/Express o PHP): Lògica de negoci, endpoints RESTful.
+
+ORM (Sequelize o equivalent): Capa d'abstracció de la base de dades relacional.
+
+Base de Dades Relacional (PostgreSQL/MySQL): Emmagatzematge de dades principals.
+
+Driver MongoDB: Per a la comunicació amb la base de dades de logs.
+
+MongoDB Atlas: Servei de base de dades NoSQL per als logs.
+
+Capes Lògiques:
+
+Capa de Presentació (Frontend): HTML, CSS, Bootstrap, JavaScript per a la UI i interacció.
+
+Capa d'Aplicació (Backend API): Endpoints RESTful, lògica de negoci, autenticació/autorització.
+
+Capa de Dades: ORM per a la BBDD relacional, driver MongoDB per a logs.
+
+Capa de Persistència: BBDD Relacional i BBDD NoSQL.
+
+3.6. Disseny de la Interfície d'Usuari (Wireframes/Prototips)
+S'utilitzarà Figma (o similar) per crear wireframes i prototips de les pantalles clau.
+
+Llista de Pantalles a Dissenyar: Pàgina d'Inici, Formulari "Registrar Nova Incidència", Pàgina "Consultar Estat d'Incidència", Llistat d'Incidències (Responsable), Formulari "Modificar Incidència", Pàgina "Detall d'Incidència i Registrar Actuació" (Tècnic), Informe de Tècnics, Informe de Consum per Departaments, Panell d'Estadístiques d'Accés (Administrador), (Extra) Pàgina de Login, (Extra) Llistat d'Incidències Assignades (Tècnic).
+
+Principis de Disseny: Consistència, claredat, eficiència, feedback, responsivitat.
+
+Exportació: Els dissenys es penjaran al repositori GitHub (PNG/PDF) i s'enllaçarà el projecte Figma.
+
+4. Desenvolupament del Backend
+
+4.1. Configuració de l'Entorn de Desenvolupament
+
+Instal·lació de Node.js i npm (o PHP i Composer).
+
+Instal·lació del SGBD (PostgreSQL/MySQL).
+
+Creació del projecte (npm init o composer init).
+
+Instal·lació de dependències: Framework web (Express.js), ORM (Sequelize) i driver del SGBD (pg, mysql2), driver de MongoDB (mongodb), i altres (bcrypt, jsonwebtoken, cors, dotenv, nodemon).
+
+4.2. Models de Dades amb l'ORM (Sequelize)
+Per a cada entitat del model E-R, es crearà un model amb l'ORM. Aquests models definiran:
+
+Els atributs de l'entitat amb els seus tipus de dades (p.ex., STRING, INTEGER, TEXT, DATE, ENUM, BOOLEAN).
+
+La clau primària (p.ex., id_incidencia amb primaryKey: true, autoIncrement: true).
+
+Les validacions a nivell de model (p.ex., allowNull: false).
+
+Els valors per defecte (p.ex., defaultValue: 'Nova' per a l'estat d'una incidència).
+
+Les associacions entre models. Per exemple, per a Incidencia:
+
+Incidencia.belongsTo(models.Departament, { foreignKey: 'id_departament_reporta_fk', as: 'departamentReporta' })
+
+Incidencia.belongsTo(models.Usuari, { foreignKey: 'id_tecnic_assignat_fk', as: 'tecnicAssignat' })
+
+Incidencia.belongsTo(models.TipusIncidencia, { foreignKey: 'id_tipus_incidencia_fk', as: 'tipusIncidencia' })
+
+Incidencia.hasMany(models.Actuacio, { foreignKey: 'id_incidencia_fk', as: 'actuacions' })
+
+El nom de la taula a la base de dades (tableName) i l'activació de timestamps (timestamps: true).
+Un fitxer índex (models/index.js) s'encarregarà de carregar tots els models i establir les associacions.
+
+4.3. API RESTful: Endpoints i Lògica de Negoci
+Es definiran rutes i controladors per a cada funcionalitat, exposant endpoints RESTful.
+
+Incidències:
+
+POST /api/incidencies: Registrar nova incidència. Body: { nom_reportador_departament, id_departament_reporta, descripcio_problema }.
+
+GET /api/incidencies/{id_incidencia}/estat: Consultar estat (actuacions visibles).
+
+GET /api/incidencies?estat=no_resolta: Llistar incidències no resoltes (per al Responsable).
+
+PUT /api/incidencies/{id_incidencia}/assignar: Modificar (assignar tècnic, tipus, prioritat). Body: { id_tecnic, id_tipus_incidencia, prioritat }.
+
+GET /api/incidencies/obertes/prioritat: Llistar incidències obertes, ordenades per prioritat.
+
+Actuacions:
+
+GET /api/incidencies/{id_incidencia}/actuacions: Obtenir totes les actuacions d'una incidència.
+
+POST /api/incidencies/{id_incidencia}/actuacions: Registrar nova actuació. Body: { descripcio_actuacio, temps_invertit_minuts, visible_usuari_reportador, incidencia_resolta_amb_actuacio }.
+
+Informes:
+
+GET /api/informes/tecnics: Informe de Tècnics.
+
+GET /api/informes/consum-departaments: Consum per departaments.
+
+Dades Mestres (per a formularis):
+
+GET /api/departaments, GET /api/tecnics (usuaris amb rol tècnic), GET /api/tipus-incidencies.
+
+Logs (Administrador):
+
+GET /api/admin/logs?data_inici=...&data_fi=...: Consultar logs amb filtres.
+
+GET /api/admin/logs/estadistiques: Obtenir estadístiques d'accés.
+
+4.4. Implementació de Consultes Específiques
+
+Informe de Tècnics:
+
+Objectiu: Per a cada tècnic, llistar les seves incidències no tancades, amb data d'inici de la incidència i el temps total dedicat a cadascuna, agrupades per prioritat.
+
+Implementació (conceptual): Es realitzarà una consulta que involucri les taules/models Usuaris (filtrant per rol 'tecnic'), Incidencies (filtrant per estats no resolts/tancats i que estiguin assignades al tècnic) i Actuacions. S'utilitzaran funcions d'agregació (com SUM sobre temps_invertit_minuts) i s'agruparan els resultats per tècnic i per incidència. L'ordenació final per prioritat dins de cada tècnic es pot gestionar a nivell d'aplicació o amb construccions SQL/ORM més complexes si és necessari.
+
+Informe de Consum per Departaments:
+
+Objectiu: Per a cada departament, mostrar el nombre total d'incidències reportades i el temps total dedicat a resoldre-les.
+
+Implementació (conceptual): Es consultarà la taula/model Departaments. Per a cada departament, es comptarà el nombre d'incidències associades (Incidencies on id_departament_reporta_fk coincideixi). Per al temps total, es requerirà una subconsulta o una unió (join) amb Incidencies i Actuacions per sumar el temps_invertit_minuts de totes les actuacions vinculades a les incidències d'aquest departament. S'utilitzaran funcions d'agregació (COUNT, SUM) i agrupació per departament.
+
+4.5. Gestió de Logs amb MongoDB
+
+Middleware d'Express.js: Es desenvoluparà un middleware que s'executarà en cada petició (excepte per recursos estàtics o peticions OPTIONS). Aquest middleware recopilarà informació com: timestamp, url_visitada, metode_http, id_usuari_acces (si està autenticat), nom_usuari_acces, rol_usuari_acces, ip_client, user_agent, parametres_consulta i opcionalment cos_peticio (amb precaució). Aquestes dades es guardaran com un nou document a la col·lecció access_logs de MongoDB.
+
+Model de Log (Mongoose o driver natiu): Es definirà un esquema per als documents de log a MongoDB, especificant els tipus de dades per a cada camp (Date, String, ObjectId, Mixed).
+
+Consultes d'Agregació per a Estadístiques: S'utilitzarà el framework d'agregació de MongoDB per generar estadístiques, com ara:
+
+Nombre total d'accessos (amb filtres opcionals per data, usuari, etc.).
+
+Pàgines més visitades (agrupant per url_visitada i comptant).
+
+Usuaris més actius (agrupant per nom_usuari_acces i comptant).
+
+Tendències d'ús (agrupant per períodes de temps, com dia o hora, i comptant accessos).
+
+4.6. Autenticació i Autorització (Funcionalitat Extra)
+
+Login: Un endpoint POST /api/auth/login acceptarà nom_usuari i contrasenya. Es validaran contra la taula Usuaris (comparant el hash de la contrasenya amb bcrypt). Si és vàlid, es generarà un JSON Web Token (JWT) amb id_usuari, nom_usuari, rol, que es retornarà al client.
+
+Middleware de Protecció de Rutes: Un middleware verificarà la presència i validesa del JWT a la capçalera Authorization. Si és vàlid, s'extraurà la informació de l'usuari (req.user). Si no, es retornarà un error 401 o 403. Es podrà aplicar selectivament per protegir rutes o per verificar rols.
+
+Logout: Principalment una operació del client (eliminar el token). Opcionalment, blacklist de tokens al servidor.
+
+5. Desenvolupament del Frontend
+
+5.1. Estructura HTML5 Semàntica
+Ús d'elements semàntics (<header>, <nav>, <main>, <article>, <footer>), formularis ben estructurats (<form>, <label>, <input>), i jerarquia de títols correcta.
+
+5.2. Estilització amb CSS i Bootstrap
+Integració de Bootstrap 5. Ús de classes de Bootstrap per a layout, components i utilitats. Un fitxer CSS personalitzat (custom.css) per a estils específics i sobreescriptures. Disseny responsive.
+
+5.3. Interactivitat amb JavaScript
+
+Validació de Formularis (Client-Side): Validació de camps obligatoris, formats, longituds mínimes/màximes per a formularis de nova incidència i nova actuació. Es mostraran missatges d'error clars.
+
+Filtres Dinàmics: Per al llistat d'incidències (per prioritat, estat, tècnic), actualitzant el llistat via AJAX.
+
+Efectes Visuals Bàsics: Indicadors de càrrega, transicions suaus, modals de Bootstrap.
+
+Manipulació del DOM: Generació dinàmica de llistats, actualització d'elements sense recarregar la pàgina.
+
+Organització del Codi JS: Separació en fitxers per funcionalitat, ús de DOMContentLoaded.
+
+5.4. Comunicació amb el Backend (API Calls)
+Ús de l'API fetch o llibreries (Axios) per a peticions HTTP (GET, POST, PUT). Gestió de respostes (parseig JSON, feedback a l'usuari). Enviament de dades de formularis en JSON. Gestió de JWT per a rutes autenticades.
+
+6. Càrrega de Dades de Mostra
+
+6.1. Scripts de Càrrega Inicial (Seeders)
+S'utilitzaran "seeders" (proporcionats per l'ORM com Sequelize CLI) per poblar la base de dades amb dades inicials per a Departaments, TipusIncidencies, Usuaris (amb rols tècnic/responsable), i un conjunt inicial d'Incidencies i Actuacions.
+
+6.2. Dades d'Exemple Detallades
+
+Departaments: "Secretaria", "Ciències Naturals", "Matemàtiques", "Llengües Estrangeres", "Tecnologia".
+
+Tipus d'Incidències: "Hardware", "Software", "Xarxa", "Usuari/Compte", "Altres".
+
+Usuaris (amb rol Tècnic/Responsable):
+
+tecnic1 (Laura Vidal, tècnic)
+
+tecnic2 (Marc Soler, tècnic)
+
+responsable_ti (Carles Puig, responsable/administrador)
+
+Incidències (mínim 5) i Actuacions (mínim 3 per incidència activa):
+
+Exemples diversos cobrint estats (Resolta, No Resolta, Nova), prioritats, tècnics assignats, i actuacions amb diferent visibilitat i temps invertit. Per exemple:
+
+Incidència 1 (Resolta): Impressora no funciona (Hardware, Alta), assignada a tecnic1, amb 3 actuacions detallant la resolució.
+
+Incidència 2 (No Resolta): Ordinador lent (Software, Mitja), assignada a tecnic2, amb 3 actuacions de diagnòstic.
+
+Incidència 3 (Nova): Accés a carpeta compartida (Xarxa, Baixa), sense assignar i sense actuacions.
+
+Altres incidències per cobrir diferents escenaris i tècnics.
+
+7. Proves i Qualitat
+
+7.1. Estratègia de Proves
+Multi-nivell: unitàries, integració, i UAT.
+
+7.2. Proves Unitàries
+
+Backend: Funcions individuals i mètodes dels models i controladors (amb Jest o Mocha/Chai), fent mock de dependències externes.
+
+Frontend: Funcions JavaScript individuals (validacions, helpers) amb Jest o similar.
+
+7.3. Proves d'Integració
+
+Backend: Interacció entre controladors API, models ORM i BBDD de proves (amb Supertest).
+
+Frontend-Backend: Comunicació AJAX, transmissió de dades.
+
+7.4. Proves d'Usuari (UAT - User Acceptance Testing)
+Escenaris basats en Casos d'Ús i User Stories, executats per l'equip o usuaris simulats en diferents navegadors/dispositius.
+
+8. Desplegament
+
+8.1. Configuració del Servidor
+Elecció de plataforma de hosting, configuració de servidor web (Nginx/Apache), BBDD de producció, i variables d'entorn per a dades sensibles.
+
+8.2. Procés de Desplegament
+
+Preparació: Minificació CSS/JS, optimització d'imatges, dependències de producció.
+
+Desplegament: Ús de Git (main branch). CI/CD (opcional) o manual (git pull, npm install --production, migracions, seeders si cal, reinici del servidor).
+
+Post-Desplegament: Proves de fum, monitorització de logs.
+
+9. Documentació Addicional
+
+9.1. README.md del Repositori
+Contindrà: Identificador del grup, integrants, objectiu breu, estat del projecte, enllaços a documentació JSDoc/PHPDoc i projecte desplegat, estructura de carpetes, enllaç a eina de prototipatge.
+
+9.2. Documentació del Codi (JSDoc / PHPDoc)
+Es comentaran funcions, classes, mètodes i paràmetres importants del codi backend i frontend seguint els estàndards JSDoc (per JavaScript) o PHPDoc (per PHP). Això inclourà descripcions de la funcionalitat, paràmetres d'entrada, tipus de retorn, i exemples d'ús si escau, per facilitar la comprensió i la generació automàtica de documentació tècnica.
+
+10. Conclusions i Treballs Futurs
+
+Conclusions: Resum dels objectius aconseguits, aprenentatges clau, reptes superats.
+Treballs Futurs / Millores Potencials: Notificacions per email, gestió d'usuaris avançada, integració amb inventari, base de coneixement, internacionalització, millores en informes, CI/CD complet, adjuntar fitxers.
+
+Aquesta estructura proporciona una base sòlida per al desenvolupament i la documentació del projecte. Cada secció s'anirà detallant a mesura que el projecte avanci.

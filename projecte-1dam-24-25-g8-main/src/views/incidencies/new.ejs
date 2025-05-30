@@ -1,0 +1,121 @@
+<%- include('../partials/header', { title: 'Crear Nova Incidència' }) %>
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-9 col-xl-8">
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-dark" style="font-family: 'Poppins', sans-serif; font-weight: 600;">
+          <i class="fas fa-plus-square me-2 text-primary"></i>Crear Nova Incidència
+        </h1>
+        <a href="/incidencies" class="btn btn-sm btn-outline-secondary">
+          <i class="fas fa-arrow-left me-1"></i>Tornar al Llistat
+        </a>
+      </div>
+
+      <div class="card border-0 shadow-lg" style="border-radius: 0.75rem;">
+        <div class="card-header bg-light border-bottom-0" style="border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem; padding: 1.25rem 1.5rem;">
+          <h5 class="mb-0 text-dark fw-normal">
+            <i class="fas fa-file-alt me-2 text-muted"></i>Introdueix les dades de la nova incidència
+          </h5>
+        </div>
+        <div class="card-body p-4 p-md-5">
+          <form action="/incidencies/create" method="POST" class="needs-validation" novalidate>
+            
+            <input type="hidden" name="estat" value="Oberta" /> 
+            <input type="hidden" name="prioritat" value="Analitzant" />
+
+            <div class="row g-3">
+              <div class="col-md-6 mb-3">
+                <label for="id_tipus" class="form-label fw-medium">Tipus d'Incidència<span class="text-danger">*</span></label>
+                <select name="id_tipus" id="id_tipus" class="form-select form-select-lg" required>
+                  <option value="" selected disabled>-- Selecciona un tipus --</option>
+                  <% if (typeof tipusList !== 'undefined' && tipusList && tipusList.length > 0) { %>
+                    <% tipusList.forEach(tipus => { %>
+                      <option value="<%= tipus.id_tipus %>"><%= tipus.nom %></option>
+                    <% }); %>
+                  <% } else { %>
+                    <option value="" disabled>No hi ha tipus disponibles</option>
+                  <% } %>
+                </select>
+                <div class="invalid-feedback">
+                  Has de seleccionar un tipus d'incidència.
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="id_departament" class="form-label fw-medium">Departament Afectat<span class="text-danger">*</span></label>
+                <select name="id_departament" id="id_departament" class="form-select form-select-lg" required>
+                  <option value="" selected disabled>-- Selecciona un departament --</option>
+                  <% if (typeof departaments !== 'undefined' && departaments && departaments.length > 0) { %>
+                    <% departaments.forEach(dept => { %>
+                      <option value="<%= dept.id_departament %>"><%= dept.nom %> (ID: <%= dept.id_departament %>)</option>
+                    <% }); %>
+                  <% } else { %>
+                    <option value="" disabled>No hi ha departaments disponibles</option>
+                  <% } %>
+                </select>
+                <div class="invalid-feedback">
+                  Has de seleccionar un departament.
+                </div>
+              </div>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-6 mb-3">
+                    <label for="ubicacio" class="form-label fw-medium">Ubicació / Aula (opcional)</label>
+                    <input type="text" name="ubicacio" id="ubicacio" class="form-control form-control-lg" placeholder="Ex: Aula B205, Biblioteca...">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="datetime_creada" class="form-label fw-medium">Data i Hora de Creació<span class="text-danger">*</span></label>
+                    <input type="datetime-local" name="datetime_creada" id="datetime_creada" class="form-control form-control-lg" 
+                           value="<%= new Date().toISOString().slice(0,16) %>" required />
+                    <div class="invalid-feedback">
+                        La data i hora de creació són obligatòries.
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+              <label for="descripcio" class="form-label fw-medium">Descripció Detallada del Problema<span class="text-danger">*</span></label>
+              <textarea name="descripcio" id="descripcio" class="form-control form-control-lg" rows="5" 
+                        required placeholder="Descriu el problema amb el màxim de detall possible: Què ha passat? Quan? On? Com es reprodueix?"></textarea>
+              <div class="invalid-feedback">
+                La descripció és obligatòria.
+              </div>
+            </div>
+            
+            <hr class="my-4">
+            <div class="d-flex justify-content-end gap-2">
+              <a href="/incidencies" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-times-circle me-2"></i>Cancel·lar
+              </a>
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-paper-plane me-2"></i>Enviar Incidència
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms)
+      .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+  })()
+</script>
+
+<%- include('../partials/footer') %>

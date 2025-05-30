@@ -1,0 +1,130 @@
+<%- include('../partials/header', { title: 'Editar Incidència' }) %>
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-9 col-xl-8">
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-dark" style="font-family: 'Poppins', sans-serif; font-weight: 600;">
+          <i class="fas fa-edit me-2 text-primary"></i>Editar Incidència
+        </h1>
+        <a href="/incidencies" class="btn btn-sm btn-outline-secondary">
+          <i class="fas fa-arrow-left me-1"></i>Tornar al Llistat
+        </a>
+      </div>
+
+      <div class="card border-0 shadow-lg" style="border-radius: 0.75rem;">
+        <div class="card-header bg-light border-bottom-0" style="border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem; padding: 1.25rem 1.5rem;">
+          <h5 class="mb-0 text-dark fw-normal">
+            <i class="fas fa-pencil-alt me-2 text-muted"></i>Modifica les dades de la incidència ID: <%= incidencia.id_incidencia %>
+          </h5>
+        </div>
+        <div class="card-body p-4 p-md-5">
+          <form action="/incidencies/<%= incidencia.id_incidencia %>/update" method="POST" class="needs-validation" novalidate>
+
+            <input type="hidden" name="id_usuari" value="<%= typeof incidencia !== 'undefined' ? incidencia.id_usuari : '' %>">
+            <input type="hidden" name="id_tipus" value="<%= typeof incidencia !== 'undefined' ? incidencia.id_tipus : '' %>">
+            <input type="hidden" name="ubicacio" value="<%= typeof incidencia !== 'undefined' ? incidencia.ubicacio : '' %>">
+
+            <div class="row g-3">
+              <div class="col-12 mb-3">
+                <label for="descripcio" class="form-label fw-medium">Descripció Detallada<span class="text-danger">*</span></label>
+                <textarea name="descripcio" id="descripcio" class="form-control form-control-lg" rows="5"
+                  required placeholder="Descriu el problema o la incidència..."><%= typeof incidencia !== 'undefined' ? incidencia.descripcio : '' %></textarea>
+                <div class="invalid-feedback">
+                  La descripció és obligatòria.
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6 mb-3">
+                <label for="datetime_creada" class="form-label fw-medium">Data i Hora de Creació<span class="text-danger">*</span></label>
+                <% 
+                  let fechaCreacioISO = '';
+                  if (typeof incidencia !== 'undefined' && incidencia.datetime_creada) {
+                    try {
+                      fechaCreacioISO = new Date(incidencia.datetime_creada).toISOString().slice(0,16);
+                    } catch (e) {
+                      console.error("Error formatejant data:", e);
+                    }
+                  }
+                %>
+                <input type="datetime-local" name="datetime_creada" id="datetime_creada" class="form-control form-control-lg"
+                  value="<%= fechaCreacioISO %>" required>
+                <div class="invalid-feedback">
+                  La data i hora de creació són obligatòries.
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-3">
+                <label for="estat" class="form-label fw-medium">Estat<span class="text-danger">*</span></label>
+                <select name="estat" id="estat" class="form-select form-select-lg" required>
+                  <option value="Oberta" <%= typeof incidencia !== 'undefined' && incidencia.estat==='Oberta' ? 'selected' : '' %>>Oberta</option>
+                  <option value="En procès" <%= typeof incidencia !== 'undefined' && incidencia.estat==='En procès' ? 'selected' : '' %>>En Procés</option>
+                  <option value="Pendent de tercers" <%= typeof incidencia !== 'undefined' && incidencia.estat==='Pendent de tercers' ? 'selected' : '' %>>Pendent de Tercers</option>
+                  <option value="Resolta" <%= typeof incidencia !== 'undefined' && incidencia.estat==='Resolta' ? 'selected' : '' %>>Resolta</option>
+                  <option value="Tancada" <%= typeof incidencia !== 'undefined' && incidencia.estat==='Tancada' ? 'selected' : '' %>>Tancada</option>
+                  <option value="Cancel·lada" <%= typeof incidencia !== 'undefined' && incidencia.estat==='Cancel·lada' ? 'selected' : '' %>>Cancel·lada</option>
+                </select>
+                <div class="invalid-feedback">
+                  Has de seleccionar un estat.
+                </div>
+              </div>
+            </div>
+            
+            <div class="row g-3">
+                <div class="col-md-6 mb-3">
+                    <label for="prioritat" class="form-label fw-medium">Prioritat<span class="text-danger">*</span></label>
+                    <select name="prioritat" id="prioritat" class="form-select form-select-lg" required>
+                        <option value="Analitzant" <%= typeof incidencia !== 'undefined' && incidencia.prioritat==="Analitzant" ? 'selected' : '' %>>Analitzant</option>
+                        <option value="Baixa" <%= typeof incidencia !== 'undefined' && incidencia.prioritat==='Baixa' ? 'selected' : '' %>>Baixa</option>
+                        <option value="Mitja" <%= typeof incidencia !== 'undefined' && incidencia.prioritat==='Mitja' ? 'selected' : '' %>>Mitjana</option>
+                        <option value="Alta" <%= typeof incidencia !== 'undefined' && incidencia.prioritat==='Alta' ? 'selected' : '' %>>Alta</option>
+                        <option value="Crítica" <%= typeof incidencia !== 'undefined' && incidencia.prioritat==='Crítica' ? 'selected' : '' %>>Crítica</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Has de seleccionar una prioritat.
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3 align-self-end"> 
+                    <div class="alert alert-secondary small p-2 mb-0 text-center" role="alert">
+                        <i class="fas fa-info-circle me-1"></i> Estat i Prioritat només editables per Administradors/Tècnics.
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            <div class="d-flex justify-content-end gap-2">
+              <a href="/incidencies" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-times-circle me-2"></i>Cancel·lar
+              </a>
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-save me-2"></i>Actualitzar Incidència
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms)
+      .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+  })()
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,85 @@
+<%- include('../partials/header', { title: 'Editar Tipus d\'Incidència' }) %>
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-7 col-xl-6">
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-dark" style="font-family: 'Poppins', sans-serif; font-weight: 600;">
+          <i class="fas fa-edit me-2 text-primary"></i>Editar Tipus d'Incidència
+        </h1>
+        <a href="/tipus/list" class="btn btn-sm btn-outline-secondary"> 
+          <i class="fas fa-arrow-left me-1"></i>Tornar al Llistat
+        </a>
+      </div>
+
+      <div class="card border-0 shadow-lg" style="border-radius: 0.75rem;">
+        <div class="card-header bg-light border-bottom-0" style="border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem; padding: 1.25rem 1.5rem;">
+          <h5 class="mb-0 text-dark fw-normal">
+            <i class="fas fa-tags me-2 text-muted"></i>Modifica el nom del tipus d'incidència
+          </h5>
+        </div>
+        <div class="card-body p-4 p-md-5">
+          <form action="/tipus/<%= typeof tipus !== 'undefined' ? tipus.id_tipus : '' %>/edit" method="POST" class="needs-validation" novalidate>
+            
+            <div class="mb-4"> 
+              <label for="nom_tipus" class="form-label fw-medium fs-5">Nom del Tipus<span class="text-danger">*</span></label>
+              <input 
+                type="text" 
+                name="nom" 
+                id="nom_tipus" 
+                class="form-control form-control-lg"
+                value="<%= typeof tipus !== 'undefined' && tipus.nom ? tipus.nom : '' %>" 
+                required
+                placeholder="Ex: Problema de Xarxa, Fallada de Hardware...">
+              <div class="invalid-feedback">
+                El nom del tipus d'incidència és obligatori.
+              </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="descripcio_tipus" class="form-label fw-medium">Descripció (opcional)</label>
+                <textarea 
+                  name="descripcio" 
+                  id="descripcio_tipus" 
+                  class="form-control form-control-lg" 
+                  rows="3"
+                  placeholder="Breu descripció o aclariment sobre aquest tipus d'incidència..."
+                ><%= typeof tipus !== 'undefined' && tipus.descripcio ? tipus.descripcio : '' %></textarea>
+            </div>
+
+            <hr class="my-4">
+            <div class="d-flex justify-content-end gap-2">
+              <a href="/tipus/list" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-times-circle me-2"></i>Cancel·lar
+              </a>
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-save me-2"></i>Actualitzar Tipus
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms)
+      .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+  })()
+</script>
+
+<%- include('../partials/footer') %>

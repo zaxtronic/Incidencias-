@@ -1,0 +1,107 @@
+<%- include('../partials/header', { title: 'Assignar Tècnic a Incidència' }) %>
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-xl-7">
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-dark" style="font-family: 'Poppins', sans-serif; font-weight: 600;">
+          <i class="fas fa-user-plus me-2 text-primary"></i>Assignar Tècnic
+        </h1>
+        <a href="/incidencies" class="btn btn-sm btn-outline-secondary">
+          <i class="fas fa-arrow-left me-1"></i>Tornar a Incidències
+        </a>
+      </div>
+
+      <div class="card shadow-lg border-0 mb-4" style="border-radius: 0.75rem;">
+        <div class="card-header bg-light border-bottom-0 d-flex align-items-center" style="padding: 1rem 1.25rem; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;">
+          <i class="fas fa-ticket-alt fa-lg me-2 text-info"></i>
+          <h5 class="mb-0 text-dark fw-medium">Detalls de la Incidència</h5>
+        </div>
+        <div class="card-body p-3 p-md-4">
+          <dl class="row mb-0">
+            <dt class="col-sm-4 col-md-3 text-muted">ID Incidència:</dt>
+            <dd class="col-sm-8 col-md-9"><%= incidencia.id_incidencia %></dd>
+
+            <dt class="col-sm-4 col-md-3 text-muted">Descripció:</dt>
+            <dd class="col-sm-8 col-md-9"><%= incidencia.descripcio %></dd>
+
+            <dt class="col-sm-4 col-md-3 text-muted">Departament:</dt>
+            <dd class="col-sm-8 col-md-9"><%= incidencia.Departament?.nom || 'No assignat' %></dd>
+
+            <dt class="col-sm-4 col-md-3 text-muted">Prioritat:</dt>
+            <dd class="col-sm-8 col-md-9">
+              <span class="badge rounded-pill 
+                <%= incidencia.prioritat === 'Alta' ? 'bg-danger-subtle text-danger-emphasis' : 
+                   incidencia.prioritat === 'Mitja' ? 'bg-warning-subtle text-warning-emphasis' : 
+                   'bg-success-subtle text-success-emphasis' %> p-2">
+                <%= incidencia.prioritat %>
+              </span>
+            </dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="card shadow-lg border-0" style="border-radius: 0.75rem;">
+        <div class="card-header bg-light border-bottom-0 d-flex align-items-center" style="padding: 1rem 1.25rem; border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;">
+          <i class="fas fa-user-cog fa-lg me-2 text-primary"></i>
+          <h5 class="mb-0 text-dark fw-medium">Assignació del Tècnic</h5>
+        </div>
+        <div class="card-body p-3 p-md-4">
+          <form action="/incidencies/assignar/<%= incidencia.id_incidencia %>" method="POST" class="needs-validation" novalidate>
+            <div class="mb-4">
+              <label for="id_tecnic" class="form-label fw-medium fs-5">Selecciona un Tècnic <span class="text-danger">*</span></label>
+              <select name="id_tecnic" id="id_tecnic" class="form-select form-select-lg" required>
+                <option value="" selected disabled>-- Selecciona un tècnic disponible --</option>
+                <% if (typeof tecnics !== 'undefined' && tecnics.length > 0) { %>
+                  <% tecnics.forEach(tecnic => { %>
+                    <option value="<%= tecnic.id_tecnic %>"><%= tecnic.nom %> (<%= tecnic.id_tecnic %>)</option>
+                  <% }); %>
+                <% } else { %>
+                  <option value="" disabled>No hi ha tècnics disponibles</option>
+                <% } %>
+              </select>
+              <div class="invalid-feedback">
+                Has de seleccionar un tècnic.
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <label for="descripcio_assignacio" class="form-label fw-medium">Comentari d'Assignació (opcional)</label>
+              <textarea name="descripcio_assignacio" id="descripcio_assignacio" class="form-control form-control-lg" rows="3" placeholder="Afegeix notes addicionals per al tècnic..."></textarea>
+            </div>
+
+            <hr class="my-4">
+            <div class="d-flex justify-content-end gap-2">
+              <a href="/incidencies" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-times-circle me-2"></i>Cancel·lar
+              </a>
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-check-circle me-2"></i>Assignar Tècnic
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms)
+      .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+  })()
+</script>
+
+<%- include('../partials/footer') %>

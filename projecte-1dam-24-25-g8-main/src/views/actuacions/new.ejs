@@ -1,0 +1,143 @@
+<%- include('../partials/header', { title: 'Afegir Nova Actuació' }) %>
+
+<div class="container py-4"> <!-- 'py-4' afegeix padding vertical al contenidor general -->
+  <div class="row justify-content-center">
+    <div class="col-lg-9 col-xl-8"> <!-- Columna una mica més ampla per a formularis -->
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-dark" style="font-family: 'Poppins', sans-serif; font-weight: 600;">
+          <i class="fas fa-plus-square me-2 text-primary"></i>Afegir Nova Actuació
+        </h1>
+        <a href="/actuacions" class="btn btn-sm btn-outline-secondary">
+          <i class="fas fa-arrow-left me-1"></i>Tornar al Llistat
+        </a>
+      </div>
+
+      <div class="card border-0 shadow-lg" style="border-radius: 0.75rem;"> <!-- Targeta més moderna -->
+        <div class="card-header bg-light border-bottom-0" style="border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem; padding: 1.25rem 1.5rem;">
+          <h5 class="mb-0 text-dark fw-normal">
+            <i class="fas fa-clipboard-check me-2 text-muted"></i>Introdueix les dades de la nova actuació
+          </h5>
+        </div>
+        <div class="card-body p-4 p-md-5"> <!-- Més padding intern -->
+          <form action="/actuacions/create" method="POST" class="needs-validation" novalidate>
+
+            <div class="row g-3"> <!-- 'g-3' per a espaiat entre columnes i files del row -->
+              <!-- Tècnic -->
+              <div class="col-md-6 mb-3">
+                <label for="id_tecnic" class="form-label fw-medium">Tècnic Assignat<span class="text-danger">*</span></label>
+                <select name="id_tecnic" id="id_tecnic" class="form-select form-select-lg" required>
+                  <option value="" selected disabled>-- Selecciona un tècnic --</option>
+                  <% tecnics.forEach(tecnic=> { %>
+                    <option value="<%= tecnic.id_tecnic %>">
+                      <%= tecnic.nom %> (<%= tecnic.id_tecnic %>)
+                    </option>
+                    <% }) %>
+                </select>
+                <div class="invalid-feedback">
+                  Has de seleccionar un tècnic.
+                </div>
+              </div>
+
+              <!-- Finalitza Actuació -->
+              <div class="col-md-6 mb-3">
+                <label for="finalitza_actuacio" class="form-label fw-medium">Finalitza Actuació<span class="text-danger">*</span></label>
+                <select name="finalitza_actuacio" id="finalitza_actuacio" class="form-select form-select-lg" required>
+                  <option value="false" selected>No</option> <!-- Per defecte 'No' -->
+                  <option value="true">Sí</option>
+                </select>
+                <div class="invalid-feedback">
+                  Indica si l'actuació finalitza.
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <!-- Data Actuació -->
+              <div class="col-md-6 mb-3">
+                <label for="data_actuacio" class="form-label fw-medium">Data de l'Actuació<span class="text-danger">*</span></label>
+                <input type="datetime-local" name="data_actuacio" id="data_actuacio" class="form-control form-control-lg" required 
+                       value="<%= new Date().toISOString().slice(0,16) %>" /> <!-- Valor per defecte: data i hora actuals -->
+                <div class="invalid-feedback">
+                  La data de l'actuació és obligatòria.
+                </div>
+              </div>
+              
+              <!-- Temps Invertit -->
+              <div class="col-md-6 mb-3">
+                <label for="temps_invertit" class="form-label fw-medium">Temps invertit (minuts)<span class="text-danger">*</span></label>
+                <input type="number" name="temps_invertit" id="temps_invertit" class="form-control form-control-lg" min="0"
+                       required placeholder="Ex: 60" />
+                <div class="invalid-feedback">
+                  Indica el temps invertit en minuts. (Valor mínim: 0)
+                </div>
+              </div>
+            </div>
+
+            <!-- Incidència Associada -->
+            <div class="mb-4"> <!-- Més marge inferior abans de la descripció -->
+              <label for="id_incidencia" class="form-label fw-medium">Incidència Associada<span class="text-danger">*</span></label>
+              <select name="id_incidencia" id="id_incidencia" class="form-select form-select-lg" required>
+                <option value="" selected disabled>-- Selecciona una incidència --</option>
+                <% incidencies.forEach(incidencia=> { %>
+                  <option value="<%= incidencia.id_incidencia %>">
+                    ID: <%= incidencia.id_incidencia %> - <%= incidencia.descripcio ? incidencia.descripcio.substring(0, 60) : 'Sense descripció' %>...
+                  </option>
+                  <% }) %>
+              </select>
+              <div class="invalid-feedback">
+                Has de seleccionar una incidència.
+              </div>
+            </div>
+
+            <!-- Descripció -->
+            <div class="mb-4">
+              <label for="descripcio" class="form-label fw-medium">Descripció Detallada de l'Actuació<span class="text-danger">*</span></label>
+              <textarea name="descripcio" id="descripcio" class="form-control form-control-lg" rows="5"
+                required placeholder="Descriu el treball realitzat, solucions aplicades, material utilitzat, etc."></textarea>
+              <div class="invalid-feedback">
+                La descripció de l'actuació és obligatòria.
+              </div>
+            </div>
+
+
+            <!-- Botons -->
+            <hr class="my-4">
+            <div class="d-flex justify-content-end gap-2"> <!-- 'gap-2' per espai entre botons -->
+              <a href="/actuacions" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-times-circle me-2"></i>Cancel·lar
+              </a>
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus-circle me-2"></i>Crear Actuació
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Script per a la validació de Bootstrap (si no el tens ja al footer global) -->
+<script>
+  // Example starter JavaScript for disabling form submissions if there are invalid fields
+  (function () {
+    'use strict'
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.querySelectorAll('.needs-validation')
+    // Loop over them and prevent submission
+    Array.prototype.slice.call(forms)
+      .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+  })()
+</script>
+
+<%- include('../partials/footer') %>

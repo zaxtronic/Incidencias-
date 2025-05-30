@@ -1,0 +1,292 @@
+<%- include('../partials/header', { title: "Llista d'Actuacions" }) %>
+
+<div class="container py-4">
+
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 pb-2 border-bottom">
+    <div>
+      <h1 class="h2 mb-1 text-dark" style="font-family: 'Poppins', sans-serif; font-weight: 600;">
+        <i class="fas fa-tasks me-2 text-primary"></i>Llistat d'Actuacions
+      </h1>
+      <p class="text-muted mb-0" id="actuacionsCounter">
+        Mostrant <%= actuacions.length %> actuació<%= actuacions.length !== 1 ? 'ns' : '' %>
+      </p>
+    </div>
+    <a href="/actuacions/new" class="btn btn-primary mt-2 mt-md-0"> <!-- Assumint que tens una ruta per a noves actuacions -->
+      <i class="fas fa-plus-circle me-2"></i>Nova Actuació
+    </a>
+  </div>
+
+  <!-- Controls de Filtre, Cerca i Ordenació -->
+  <div class="card shadow-sm mb-4" style="border-radius: 0.75rem;">
+    <div class="card-body p-3">
+      <div class="row g-2 align-items-center">
+        <div class="col-lg-5 col-md-12 mb-2 mb-lg-0">
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0"><i class="fas fa-search text-muted"></i></span>
+            <input type="text" id="searchInput" class="form-control border-start-0" placeholder="Cercar per descripció, tècnic, ID...">
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-4">
+          <select class="form-select" id="filterFinalitzada" aria-label="Filtrar per estat">
+            <option value="" selected>Estat: Totes</option>
+            <option value="true">Finalitzades</option>
+            <option value="false">En curs</option>
+          </select>
+        </div>
+        <div class="col-lg-3 col-md-4">
+          <!-- Pots afegir un filtre per tècnic si tens molts -->
+          <select class="form-select" id="filterTecnic" aria-label="Filtrar per tècnic">
+            <option value="" selected>Tècnic: Tots</option>
+            <% // Genera opcions per a tècnics únics de les actuacions actuals
+               const tecnicsUnics = [...new Set(actuacions.map(a => a.tecnic && a.tecnic.nom).filter(Boolean))];
+               tecnicsUnics.sort().forEach(nomTecnic => { %>
+                 <option value="<%= nomTecnic %>"><%= nomTecnic %></option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="col-lg-2 col-md-4">
+          <select class="form-select" id="sortOrder" aria-label="Ordenar per">
+            <option value="recent" selected>Més recents</option>
+            <option value="antic">Més antics</option>
+            <option value="tempsAsc">Temps invertit (asc)</option>
+            <option value="tempsDesc">Temps invertit (desc)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Llistat d'Actuacions -->
+  <div id="actuacioList" class="row row-cols-1 row-cols-lg-2 g-4">
+    <% if (actuacions.length === 0) { %>
+      <div class="col-12">
+        <div class="alert alert-info text-center" role="alert">
+          <i class="fas fa-info-circle me-2"></i>No s'han trobat actuacions que coincideixin amb els criteris.
+        </div>
+      </div>
+    <% } %>
+    <% actuacions.forEach(function(actuacio) { %>
+      <div class="col" data-id-actuacio="<%= actuacio.id_actuacio %>">
+        <div class="card h-100 shadow-sm border-0" style="border-radius: 0.75rem; transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;">
+          <style scoped> /* Estils 'scoped' per a efecte hover (alternativa a JS per a estil simple) */
+             .col[data-id-actuacio="<%= actuacio.id_actuacio %>"] .card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+             }
+          </style>
+          <div class="card-header bg-light border-bottom-0 d-flex justify-content-between align-items-center" style="border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;">
+            <h6 class="mb-0 text-dark fw-medium">
+              <i class="fas fa-hashtag me-1 text-muted"></i>ID Actuació: <%= actuacio.id_actuacio %>
+            </h6>
+            <span class="badge rounded-pill <%= actuacio.finalitza_actuacio ? 'bg-success-subtle text-success-emphasis' : 'bg-warning-subtle text-warning-emphasis' %> p-2">
+              <i class="fas <%= actuacio.finalitza_actuacio ? 'fa-check-circle' : 'fa-hourglass-half' %> me-1"></i>
+              <%= actuacio.finalitza_actuacio ? 'Finalitzada' : 'En Curs' %>
+            </span>
+          </div>
+
+          <div class="card-body pb-2">
+            <p class="card-text mb-2 small text-muted">
+              <i class="fas fa-calendar-alt me-1"></i>
+              <%= new Date(actuacio.data_actuacio).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+              <i class="fas fa-clock ms-2 me-1"></i>
+              <%= new Date(actuacio.data_actuacio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
+            </p>
+            
+            <h5 class="card-title h6 mb-2">
+              <i class="fas fa-user-cog me-2 text-primary"></i>
+              <strong>Tècnic:</strong> <%= actuacio.tecnic && actuacio.tecnic.nom ? actuacio.tecnic.nom : 'Desconegut' %>
+              <span class="text-muted small">(ID: <%= actuacio.id_tecnic %>)</span>
+            </h5>
+            
+            <p class="card-text mb-3" style="font-size: 0.95rem; max-height: 100px; overflow-y: auto;">
+              <strong class="d-block mb-1">Descripció:</strong>
+              <%= actuacio.descripcio %>
+            </p>
+
+            <div class="row g-2 small text-muted border-top pt-2">
+              <div class="col-6">
+                <i class="fas fa-link me-1"></i>
+                <strong>Incidència ID:</strong> <%= actuacio.id_incidencia %>
+              </div>
+              <div class="col-6">
+                <i class="fas fa-stopwatch me-1"></i>
+                <strong>Temps:</strong> <%= actuacio.temps_invertit %> min
+              </div>
+            </div>
+          </div>
+
+          <div class="card-footer bg-white border-top-0 pt-0 pb-3 d-flex justify-content-end">
+             <div class="btn-group btn-group-sm" role="group">
+                <a href="/actuacions/<%= actuacio.id_actuacio %>/edit" class="btn btn-outline-primary" title="Editar Actuació">
+                  <i class="fas fa-pencil-alt me-1"></i>Editar
+                </a>
+                <!-- Compte amb l'eliminació directa, considera una confirmació -->
+                <a href="/actuacions/<%= actuacio.id_actuacio %>/delete" class="btn btn-outline-danger" title="Eliminar Actuació" onclick="return confirm('Estàs segur que vols eliminar aquesta actuació? Aquesta acció no es pot desfer.');">
+                  <i class="fas fa-trash-alt me-1"></i>Eliminar
+                </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+  <div id="noResultsMessage" class="col-12 mt-4" style="display: none;">
+    <div class="alert alert-warning text-center">
+        <i class="fas fa-exclamation-triangle me-2"></i>No s'han trobat actuacions que coincideixin amb la cerca o filtres aplicats.
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // Guardar les dades originals per restaurar
+  const originalActuacionsHTML = document.getElementById('actuacioList').innerHTML;
+  const allActuacionsData = JSON.parse('<%- JSON.stringify(actuacions) %>');
+
+  const searchInput = document.getElementById('searchInput');
+  const filterFinalitzada = document.getElementById('filterFinalitzada');
+  const filterTecnic = document.getElementById('filterTecnic');
+  const sortOrder = document.getElementById('sortOrder');
+  const actuacioListContainer = document.getElementById('actuacioList');
+  const actuacionsCounter = document.getElementById('actuacionsCounter');
+  const noResultsMessage = document.getElementById('noResultsMessage');
+
+  function updateActuacionsDisplay(filteredAndSortedActuacions) {
+    actuacioListContainer.innerHTML = ''; // Netejar llista actual
+
+    if (filteredAndSortedActuacions.length === 0) {
+        noResultsMessage.style.display = 'block';
+    } else {
+        noResultsMessage.style.display = 'none';
+        filteredAndSortedActuacions.forEach(actuacio => {
+        // Re-crear l'HTML de la card aquí, similar a com ho fas amb EJS
+        // Això és una simplificació. En una app complexa, utilitzaries llibreries de templating JS o Components Web.
+        const cardHTML = `
+          <div class="col" data-id-actuacio="${ actuacio.id_actuacio }">
+            <div class="card h-100 shadow-sm border-0" style="border-radius: 0.75rem; transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;">
+              <style scoped>
+                 .col[data-id-actuacio="${ actuacio.id_actuacio }"] .card:hover {
+                    transform: translateY(-4px);
+                    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
+                 }
+              </style>
+              <div class="card-header bg-light border-bottom-0 d-flex justify-content-between align-items-center" style="border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem;">
+                <h6 class="mb-0 text-dark fw-medium">
+                  <i class="fas fa-hashtag me-1 text-muted"></i>ID Actuació: ${ actuacio.id_actuacio }
+                </h6>
+                <span class="badge rounded-pill ${ actuacio.finalitza_actuacio ? 'bg-success-subtle text-success-emphasis' : 'bg-warning-subtle text-warning-emphasis' } p-2">
+                  <i class="fas ${ actuacio.finalitza_actuacio ? 'fa-check-circle' : 'fa-hourglass-half' } me-1"></i>
+                  ${ actuacio.finalitza_actuacio ? 'Finalitzada' : 'En Curs' }
+                </span>
+              </div>
+              <div class="card-body pb-2">
+                <p class="card-text mb-2 small text-muted">
+                  <i class="fas fa-calendar-alt me-1"></i>
+                  ${ new Date(actuacio.data_actuacio).toLocaleDateString('ca-ES', { year: 'numeric', month: 'long', day: 'numeric' }) }
+                  <i class="fas fa-clock ms-2 me-1"></i>
+                  ${ new Date(actuacio.data_actuacio).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }
+                </p>
+                <h5 class="card-title h6 mb-2">
+                  <i class="fas fa-user-cog me-2 text-primary"></i>
+                  <strong>Tècnic:</strong> ${ actuacio.tecnic && actuacio.tecnic.nom ? actuacio.tecnic.nom : 'Desconegut' }
+                  <span class="text-muted small">(ID: ${ actuacio.id_tecnic })</span>
+                </h5>
+                <p class="card-text mb-3" style="font-size: 0.95rem; max-height: 100px; overflow-y: auto;">
+                  <strong class="d-block mb-1">Descripció:</strong>
+                  ${ actuacio.descripcio }
+                </p>
+                <div class="row g-2 small text-muted border-top pt-2">
+                  <div class="col-6">
+                    <i class="fas fa-link me-1"></i>
+                    <strong>Incidència ID:</strong> ${ actuacio.id_incidencia }
+                  </div>
+                  <div class="col-6">
+                    <i class="fas fa-stopwatch me-1"></i>
+                    <strong>Temps:</strong> ${ actuacio.temps_invertit } min
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer bg-white border-top-0 pt-0 pb-3 d-flex justify-content-end">
+                 <div class="btn-group btn-group-sm" role="group">
+                    <a href="/actuacions/${ actuacio.id_actuacio }/edit" class="btn btn-outline-primary" title="Editar Actuació">
+                      <i class="fas fa-pencil-alt me-1"></i>Editar
+                    </a>
+                    <a href="/actuacions/${ actuacio.id_actuacio }/delete" class="btn btn-outline-danger" title="Eliminar Actuació" onclick="return confirm('Estàs segur que vols eliminar aquesta actuació? Aquesta acció no es pot desfer.');">
+                      <i class="fas fa-trash-alt me-1"></i>Eliminar
+                    </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        actuacioListContainer.insertAdjacentHTML('beforeend', cardHTML);
+      });
+    }
+    actuacionsCounter.textContent = `Mostrant ${filteredAndSortedActuacions.length} actuació${filteredAndSortedActuacions.length !== 1 ? 'ns' : ''}`;
+  }
+
+
+  function applyFiltersAndSort() {
+    const searchTerm = searchInput.value.toLowerCase();
+    const finalitzadaFilter = filterFinalitzada.value;
+    const tecnicFilter = filterTecnic.value;
+    const sortValue = sortOrder.value;
+
+    let filteredActuacions = allActuacionsData.filter(actuacio => {
+      const textContent = (
+        actuacio.id_actuacio.toString() +
+        (actuacio.tecnic ? actuacio.tecnic.nom : '') +
+        actuacio.descripcio +
+        actuacio.id_incidencia.toString()
+      ).toLowerCase();
+      const matchesSearch = textContent.includes(searchTerm);
+
+      const matchesFinalitzada = !finalitzadaFilter || actuacio.finalitza_actuacio.toString() === finalitzadaFilter;
+      
+      const matchesTecnic = !tecnicFilter || (actuacio.tecnic && actuacio.tecnic.nom === tecnicFilter);
+
+      return matchesSearch && matchesFinalitzada && matchesTecnic;
+    });
+
+    // Ordenar
+    filteredActuacions.sort((a, b) => {
+      const dateA = new Date(a.data_actuacio);
+      const dateB = new Date(b.data_actuacio);
+      const tempsA = parseInt(a.temps_invertit) || 0;
+      const tempsB = parseInt(b.temps_invertit) || 0;
+
+      if (sortValue === 'recent') return dateB - dateA;
+      if (sortValue === 'antic') return dateA - dateB;
+      if (sortValue === 'tempsAsc') return tempsA - tempsB;
+      if (sortValue === 'tempsDesc') return tempsB - tempsA;
+      return 0;
+    });
+
+    updateActuacionsDisplay(filteredActuacions);
+  }
+
+  // Event Listeners
+  searchInput.addEventListener('input', applyFiltersAndSort);
+  filterFinalitzada.addEventListener('change', applyFiltersAndSort);
+  filterTecnic.addEventListener('change', applyFiltersAndSort);
+  sortOrder.addEventListener('change', applyFiltersAndSort);
+
+  // Aplicar filtres inicialment si cal (ex: si vols un estat per defecte)
+  document.addEventListener('DOMContentLoaded', () => {
+    if (allActuacionsData.length > 0) {
+        applyFiltersAndSort(); // Carrega inicial amb totes les actuacions i ordenació per defecte
+    } else {
+        actuacioListContainer.innerHTML = `
+            <div class="col-12">
+                <div class="alert alert-info text-center" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>Actualment no hi ha cap actuació registrada.
+                </div>
+            </div>`;
+        actuacionsCounter.textContent = "Mostrant 0 actuacions";
+        noResultsMessage.style.display = 'none'; // Amaga el missatge de "no resultats de filtre"
+    }
+  });
+
+</script>
+
+<%- include('../partials/footer') %>

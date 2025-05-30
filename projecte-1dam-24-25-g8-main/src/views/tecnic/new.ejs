@@ -1,0 +1,110 @@
+<%- include('../partials/header', { title: 'Afegir Nou Tècnic' }) %>
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-7 col-xl-6">
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-dark" style="font-family: 'Poppins', sans-serif; font-weight: 600;">
+          <i class="fas fa-user-plus me-2 text-primary"></i>Afegir Nou Tècnic
+        </h1>
+        <a href="/tecnic/list" class="btn btn-sm btn-outline-secondary"> <!-- Assumint que /tecnic/list és la llista -->
+          <i class="fas fa-arrow-left me-1"></i>Tornar al Llistat
+        </a>
+      </div>
+
+      <div class="card border-0 shadow-lg" style="border-radius: 0.75rem;">
+        <div class="card-header bg-light border-bottom-0" style="border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem; padding: 1.25rem 1.5rem;">
+          <h5 class="mb-0 text-dark fw-normal">
+            <i class="fas fa-user-cog me-2 text-muted"></i>Dades del nou tècnic
+          </h5>
+        </div>
+        <div class="card-body p-4 p-md-5">
+          <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
+            <div class="alert alert-danger alert-dismissible fade show small py-2 px-3" role="alert">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              <%= error %>
+              <button type="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          <% } %>
+          
+          <form action="/tecnic/new" method="POST" class="needs-validation" novalidate> 
+            <%# O action="/tecnic/create" si la teva ruta POST és així %>
+            
+            <div class="mb-4">
+              <label for="nom_tecnic" class="form-label fw-medium fs-5">Nom del Tècnic<span class="text-danger">*</span></label>
+              <input 
+                type="text" 
+                name="nom" 
+                id="nom_tecnic" 
+                class="form-control form-control-lg"
+                value="<%= typeof tecnic !== 'undefined' && tecnic.nom ? tecnic.nom : '' %>"
+                placeholder="Ex: Laura Vila, Carles Puig..." 
+                required
+                autofocus>
+              <div class="invalid-feedback">
+                El nom del tècnic és obligatori.
+              </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="especialitat_tecnic" class="form-label fw-medium">Especialitat (opcional)</label>
+                <input 
+                  type="text" 
+                  name="especialitat" 
+                  id="especialitat_tecnic" 
+                  class="form-control form-control-lg"
+                  value="<%= typeof tecnic !== 'undefined' && tecnic.especialitat ? tecnic.especialitat : '' %>"
+                  placeholder="Ex: Xarxes, Manteniment Hardware, Suport Aplicacions...">
+            </div>
+            
+            <!-- Pots afegir més camps aquí si el teu model Tècnic els té, com email, telèfon, etc. -->
+            <!-- Exemple:
+            <div class="mb-3">
+                <label for="email_tecnic" class="form-label fw-medium">Correu Electrònic (opcional)</label>
+                <input 
+                  type="email" 
+                  name="email" 
+                  id="email_tecnic" 
+                  class="form-control form-control-lg"
+                  value="<%= typeof tecnic !== 'undefined' && tecnic.email ? tecnic.email : '' %>"
+                  placeholder="nom.cognom@institut.com">
+            </div>
+            -->
+
+            <hr class="my-4">
+            <div class="d-flex justify-content-end gap-2">
+              <a href="/tecnic/list" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-times-circle me-2"></i>Cancel·lar
+              </a>
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-plus-circle me-2"></i>Crear Tècnic
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Script de validació de Bootstrap
+  (function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms)
+      .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+  })()
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ca"> <!-- Especifica l'idioma -->
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Clau per a responsivitat -->
+  <title><%= title %> - Gestió d'Incidències Pedralbes</title> <!-- Títol més descriptiu -->
+
+  <!-- Google Fonts (Opcional - Recomanat per a una millor tipografia) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootswatch Theme (Escull-ne NOMÉS UN - aquí 'Lux' com a exemple) -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/lux/bootstrap.min.css"
+    crossorigin="anonymous"
+  />
+  <!-- O si prefereixes Bootstrap base sense tema Bootswatch: -->
+  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"> -->
+
+  <!-- Font Awesome per a icones -->
+  <link 
+    rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" 
+    integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" 
+    crossorigin="anonymous" 
+    referrerpolicy="no-referrer" />
+
+  <!-- El teu CSS personalitzat (si el tens en un fitxer extern) -->
+  <!-- <link rel="stylesheet" href="/css/custom-styles.css"> -->
+
+  <style>
+    /* Estils personalitzats addicionals */
+    body {
+      font-family: 'Inter', sans-serif; /* Font per defecte del cos */
+      background-color: #f4f7f6; /* Un gris molt clar per al fons, més suau que el bg-light per defecte */
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh; /* Per a un footer enganxat a baix */
+    }
+
+    .navbar-custom {
+      background-color: #ffffff; /* Navbar blanca */
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Ombra subtil */
+      padding-top: 0.8rem;
+      padding-bottom: 0.8rem;
+    }
+
+    .navbar-custom .navbar-brand {
+      font-family: 'Poppins', sans-serif; /* Font diferent per al brand */
+      font-weight: 600;
+      color: #333 !important; /* Color del brand més fosc */
+      font-size: 1.5rem;
+    }
+    .navbar-custom .navbar-brand .brand-icon {
+      color: #007bff; /* Color d'accent per a la icona del brand (pot ser el del tema 'Lux') */
+      margin-right: 0.5rem;
+    }
+
+    .navbar-custom .nav-link {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      color: #555 !important; /* Color dels enllaços */
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+      transition: color 0.2s ease-in-out;
+    }
+
+    .navbar-custom .nav-link:hover,
+    .navbar-custom .nav-link.active { /* Pots afegir una classe 'active' a l'enllaç de la pàgina actual */
+      color: #007bff !important; /* Color d'accent en hover/actiu */
+    }
+    
+    .navbar-custom .navbar-toggler {
+        border-color: rgba(0,0,0,0.1);
+    }
+    .navbar-custom .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2851, 51, 51, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+
+    .page-container {
+      flex-grow: 1; /* Permet que el contingut principal creixi i empenyi el footer cap avall */
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+    }
+
+    /* (Opcional) Footer enganxat a baix - si vols afegir un footer global */
+    /* .footer-custom {
+      background-color: #343a40;
+      color: #f8f9fa;
+      padding: 1.5rem 0;
+      text-align: center;
+      font-size: 0.9rem;
+      margin-top: auto; /* Empeny el footer cap avall si el contingut és curt */
+    
+
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100"> <!-- Classes per a footer enganxat a baix -->
+
+  <nav class="navbar navbar-expand-lg navbar-custom sticky-top"> <!-- sticky-top per a navbar fixa a dalt -->
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <i class="fas fa-tools brand-icon"></i> <!-- Icona de Font Awesome -->
+        Gestió Incidències
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto"> <!-- ms-auto per alinear a la dreta -->
+          <li class="nav-item">
+            <a class="nav-link <%= title === 'Inici' ? 'active' : '' %>" href="/index">
+              <i class="fas fa-home me-1"></i>Inici
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= title.includes('Incidències') ? 'active' : '' %>" href="/incidencies">
+              <i class="fas fa-exclamation-triangle me-1"></i>Incidències
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <%= title.includes('Actuacions') ? 'active' : '' %>" href="/actuacions">
+              <i class="fas fa-clipboard-list me-1"></i>Actuacions
+            </a>
+          </li>   
+          <li class="nav-item">
+            <a class="nav-link <%= title.includes('Admin') ? 'active' : '' %>" href="/admin/control-panel">
+              <i class="fas fa-user-shield me-1"></i>Admin
+            </a>
+          </li>      
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- El contingut de la pàgina anirà aquí, dins del .page-container -->
+  <main class="container page-container">
+    <!-- AQUEST 'container' que tenies abans es converteix en part del 'main' o es gestiona per cada pàgina -->

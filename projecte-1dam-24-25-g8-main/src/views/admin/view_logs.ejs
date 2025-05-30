@@ -1,0 +1,202 @@
+<%- include('../partials/header', { title: title }) %>
+
+<div class="container py-5">
+
+  <header class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 pb-3 border-bottom">
+    <div>
+      <h1 class="display-6 mb-1 text-dark" style="font-family: 'Poppins', sans-serif; font-weight: 600;">
+        <i class="fas fa-scroll me-2 text-primary"></i><%= title %>
+      </h1>
+      <p class="text-muted mb-0">Explora i cerca els registres detallats de l'activitat del sistema.</p>
+    </div>
+    <a href="/index" class="btn btn-outline-secondary mt-3 mt-md-0">
+      <i class="fas fa-arrow-left me-2"></i>Tornar al Panell Principal
+    </a>
+  </header>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <i class="fas fa-exclamation-triangle me-2"></i><%= error %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% } %>
+
+  <!-- Formulari de Cerca i Controls -->
+  <form method="GET" action="/admin/view_logs" class="mb-4 p-3 bg-light border rounded-3">
+    <div class="row g-2 align-items-end">
+      <div class="col-md">
+        <label for="searchInput" class="form-label small fw-medium">Terme de cerca:</label>
+        <div class="input-group">
+          <span class="input-group-text"><i class="fas fa-search"></i></span>
+          <input type="text" name="search" id="searchInput" class="form-control form-control-lg" placeholder="Cerca per missatge, usuari, IP, URL..." value="<%= typeof searchTerm !== 'undefined' ? searchTerm : '' %>">
+        </div>
+      </div>
+      <div class="col-md-auto">
+        <label for="limitSelect" class="form-label small fw-medium">Registres per pàgina:</label>
+        <select name="limit" id="limitSelect" class="form-select form-select-lg" onchange="this.form.submit()">
+          <option value="10" <%= (typeof limit !== 'undefined' && limit == 10) || typeof limit === 'undefined' ? 'selected' : '' %>>10</option>
+          <option value="25" <%= typeof limit !== 'undefined' && limit == 25 ? 'selected' : '' %>>25</option>
+          <option value="50" <%= typeof limit !== 'undefined' && limit == 50 ? 'selected' : '' %>>50</option>
+          <option value="100" <%= typeof limit !== 'undefined' && limit == 100 ? 'selected' : '' %>>100</option>
+        </select>
+      </div>
+      <div class="col-md-auto d-flex align-items-end">
+        <button class="btn btn-primary btn-lg" type="submit" style="width: 120px;">
+          <i class="fas fa-filter me-1"></i>Cercar
+        </button>
+        <% if (typeof searchTerm !== 'undefined' && searchTerm) { %>
+          <a href="/admin/view_logs?limit=<%= typeof limit !== 'undefined' ? limit : 10 %>" class="btn btn-outline-secondary btn-lg ms-2" style="width: 120px;">
+            <i class="fas fa-times me-1"></i>Netejar
+          </a>
+        <% } %>
+      </div>
+    </div>
+  </form>
+
+  <% if (typeof logs !== 'undefined' && logs && logs.length > 0) { %>
+    <div class="card shadow-sm border-0" style="border-radius: 0.75rem;">
+      <div class="card-body p-0"> 
+        <div class="table-responsive" style="border-radius: 0.75rem;">
+          <table class="table table-hover table-nowrap mb-0 align-middle" style="font-size: 0.9rem;">
+            <thead class="table-light">
+              <tr>
+                <th scope="col" class="ps-3">Data i Hora</th>
+                <th scope="col">Nivell</th>
+                <th scope="col">Usuari</th>
+                <th scope="col">Mètode</th>
+                <th scope="col">URL</th>
+                <th scope="col">Estat</th>
+                <th scope="col">IP</th>
+                <th scope="col">User Agent</th>
+                <th scope="col" class="pe-3">Missatge</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% logs.forEach(log => { %>
+                <tr class="log-row" style="cursor: default;" title="Log ID: <%= log._id %>">
+                  <td class="ps-3 text-nowrap"><%= new Date(log.timestamp).toLocaleString('ca-ES', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit'}) %></td>
+                  <td>
+                    <% 
+                      let badgeClass = 'bg-info-subtle text-info-emphasis';
+                      if (log.level === 'ERROR') badgeClass = 'bg-danger-subtle text-danger-emphasis';
+                      else if (log.level === 'WARN') badgeClass = 'bg-warning-subtle text-warning-emphasis';
+                      else if (log.level === 'INFO') badgeClass = 'bg-primary-subtle text-primary-emphasis';
+                    %>
+                    <span class="badge rounded-pill <%= badgeClass %> p-2"><%= log.level %></span>
+                  </td>
+                  <td class="text-nowrap">
+                    <%= log.username || '-' %>
+                    <% if (log.userId) { %>
+                      <br><small class="text-muted">(ID: <%= log.userId %>)</small>
+                    <% } %>
+                  </td>
+                  <td><span class="badge bg-secondary-subtle text-secondary-emphasis"><%= log.method || '-' %></span></td>
+                  <td style="min-width: 200px; max-width: 300px;">
+                    <div class="text-truncate" title="<%= log.url %>"><%= log.url || '-' %></div>
+                  </td>
+                  <td>
+                     <span class="badge rounded-pill 
+                        <%= log.statusCode >= 500 ? 'bg-danger-subtle text-danger-emphasis' : 
+                           log.statusCode >= 400 ? 'bg-warning-subtle text-warning-emphasis' : 
+                           log.statusCode >= 300 ? 'bg-info-subtle text-info-emphasis' : 
+                           'bg-success-subtle text-success-emphasis' %>">
+                        <%= log.statusCode || '-' %>
+                     </span>
+                  </td>
+                  <td class="text-nowrap"><%= log.ip || '-' %></td>
+                  <td style="min-width: 150px; max-width: 250px; font-size: 0.85em;">
+                    <div class="text-truncate" title="<%= log.userAgent %>"><%= log.userAgent || '-' %></div>
+                  </td>
+                  <td class="pe-3" style="min-width: 250px; max-width: 400px;">
+                    <div class="text-truncate" title="<%= log.message %>"><%= log.message || '-' %></div>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Paginació -->
+    <% if (typeof totalPages !== 'undefined' && totalPages > 1 && typeof currentPage !== 'undefined' && typeof logs !== 'undefined') { %>
+      <div class="mt-4 d-flex flex-column flex-md-row justify-content-between align-items-center">
+        <p class="text-muted small mb-2 mb-md-0">
+          Pàgina <%= currentPage %> de <%= totalPages %>. 
+          <% if (typeof totalLogs !== 'undefined') { %>
+            Mostrant <%= logs.length %> de <%= totalLogs %> registres.
+          <% } else { %>
+            Mostrant <%= logs.length %> registres.
+          <% } %>
+        </p>
+        <nav aria-label="Paginació dels logs">
+          <ul class="pagination pagination-sm mb-0">
+            <% 
+              const currentSearchTerm = typeof searchTerm !== 'undefined' ? searchTerm : '';
+              const currentLimit = typeof limit !== 'undefined' ? limit : 10;
+            %>
+            <% if (currentPage > 1) { %>
+              <li class="page-item">
+                <a class="page-link" href="/admin/view_logs?page=1&search=<%= currentSearchTerm %>&limit=<%= currentLimit %>" aria-label="Primera">
+                  <span aria-hidden="true">««</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="/admin/view_logs?page=<%= currentPage - 1 %>&search=<%= currentSearchTerm %>&limit=<%= currentLimit %>" aria-label="Anterior">
+                  <span aria-hidden="true">«</span>
+                </a>
+              </li>
+            <% } else { %>
+              <li class="page-item disabled"><span class="page-link">««</span></li>
+              <li class="page-item disabled"><span class="page-link">«</span></li>
+            <% } %>
+
+            <% 
+              const maxPagesToShow = 5; 
+              let startPage = 1;
+              let endPage = totalPages;
+              
+              startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+              endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+              if (endPage - startPage + 1 < maxPagesToShow) { 
+                  startPage = Math.max(1, endPage - maxPagesToShow + 1);
+              }
+              
+              for (let i = startPage; i <= endPage; i++) {
+            %>
+              <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                <a class="page-link" href="/admin/view_logs?page=<%= i %>&search=<%= currentSearchTerm %>&limit=<%= currentLimit %>">
+                  <%= i %>
+                </a>
+              </li>
+            <% } %>
+
+            <% if (currentPage < totalPages) { %>
+              <li class="page-item">
+                <a class="page-link" href="/admin/view_logs?page=<%= currentPage + 1 %>&search=<%= currentSearchTerm %>&limit=<%= currentLimit %>" aria-label="Següent">
+                  <span aria-hidden="true">»</span>
+                </a>
+              </li>
+              <li class="page-item">
+                <a class="page-link" href="/admin/view_logs?page=<%= totalPages %>&search=<%= currentSearchTerm %>&limit=<%= currentLimit %>" aria-label="Última">
+                  <span aria-hidden="true">»»</span>
+                </a>
+              </li>
+            <% } else { %>
+              <li class="page-item disabled"><span class="page-link">»</span></li>
+              <li class="page-item disabled"><span class="page-link">»»</span></li>
+            <% } %>
+          </ul>
+        </nav>
+      </div>
+    <% } %>
+  <% } else if (!(typeof error !== 'undefined' && error)) { %>
+    <div class="alert alert-info mt-4 text-center">
+      <i class="fas fa-info-circle fa-2x mb-2 d-block"></i>
+      No s'han trobat registres que coincideixin amb la cerca o no hi ha registres al sistema.
+    </div>
+  <% } %>
+
+</div>
+
+<%- include('../partials/footer') %>

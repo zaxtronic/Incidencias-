@@ -1,0 +1,395 @@
+<%- include('partials/header', { title: 'Plataforma Central d\'Incidències' }) %>
+
+<!-- Google Fonts and Font Awesome comments are illustrative; ensure actual imports are in your header partial -->
+<style>
+  :root {
+    --bg-main: #f8f9fa; /* Very light grey, almost white */
+    --bg-card: #ffffff;
+    --bg-accent-light: #eef3f7; /* A very light, cool accent for some backgrounds */
+    --text-primary: #212529; /* Dark grey for main text */
+    --text-secondary: #5a6268; /* Medium grey for secondary text */
+    --text-muted: #86909c; /* Lighter grey */
+    --accent-main: #007bff;  /* Classic Bootstrap Blue */
+    --accent-secondary: #28a745; /* Green for positive actions or highlights */
+    --accent-cta: #ffc107; /* Yellow/Amber for strong calls to action */
+    --border-color: #dee2e6;
+    --shadow-soft: 0 4px 12px rgba(0,0,0,0.08);
+    --shadow-medium: 0 8px 20px rgba(0,0,0,0.1);
+    --font-heading: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-body: 'Open Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    --rgb-accent-main: 0, 123, 255; /* For rgba shadows */
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    line-height: 1.65;
+    font-size: 16px; /* Base font size */
+  }
+
+  .page-container {
+    max-width: 1170px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .hero-section {
+    background: linear-gradient(135deg, var(--accent-main) 0%, #0056b3 100%);
+    color: #ffffff;
+    padding: 5rem 0 4rem;
+    text-align: center;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    margin-bottom: 3rem;
+  }
+
+  .hero-section__title {
+    font-family: var(--font-heading);
+    font-size: clamp(2.4rem, 5vw, 3.5rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .hero-section__title .highlight-text {
+    color: var(--accent-cta); /* Yellow highlight */
+  }
+
+  .hero-section__subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    max-width: 720px;
+    margin: 0 auto 2rem auto;
+    font-weight: 300;
+    opacity: 0.9;
+  }
+  
+  .hero-benefits {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2.5rem;
+    flex-wrap: wrap;
+  }
+  .hero-benefits__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    background-color: rgba(255,255,255,0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+  }
+  .hero-benefits__item i {
+    color: var(--accent-cta);
+  }
+
+  .content-section {
+    padding: 3rem 0;
+  }
+  .section-title {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .section-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 3rem auto;
+  }
+
+  .process-steps {
+    background-color: var(--bg-card);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow-soft);
+    margin-bottom: 3rem;
+  }
+  .process-steps p {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    text-align: justify;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .feature-card {
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    padding: 2rem 1.5rem;
+    text-align: left; /* Changed from center */
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    border-left: 5px solid transparent; /* Accent border on hover */
+  }
+  .feature-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-medium);
+    border-left-color: var(--accent-main);
+  }
+
+  .feature-card__header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .feature-card__icon {
+    font-size: 2rem;
+    color: var(--accent-main);
+    margin-right: 1rem;
+    background-color: var(--bg-accent-light);
+    padding: 0.75rem;
+    border-radius: 50%;
+    width: 50px; /* Fixed width */
+    height: 50px; /* Fixed height */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .feature-card__title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0; /* Removed bottom margin as it's in header */
+  }
+  .feature-card__description {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+  }
+  .feature-card__action {
+    display: inline-block;
+    background-color: var(--accent-main);
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    align-self: flex-start; /* Align button to the start of the card */
+  }
+  .feature-card__action:hover {
+    background-color: #0056b3; /* Darker blue */
+    transform: translateY(-2px);
+  }
+  .feature-card__action--secondary {
+    background-color: transparent;
+    color: var(--accent-secondary);
+    border: 2px solid var(--accent-secondary);
+  }
+  .feature-card__action--secondary:hover {
+    background-color: var(--accent-secondary);
+    color: #fff;
+  }
+
+  .commitment-section {
+    background-color: var(--bg-accent-light);
+    padding: 3rem 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 3rem;
+  }
+  .commitment-section ul {
+    list-style: none;
+    padding-left: 0;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .commitment-section li {
+    padding-left: 2rem;
+    position: relative;
+    margin-bottom: 0.75rem;
+    font-size: 1.05rem;
+  }
+  .commitment-section li::before {
+    content: "\f00c"; /* Font Awesome check icon */
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    color: var(--accent-secondary);
+    position: absolute;
+    left: 0;
+    top: 3px;
+  }
+
+  .admin-panel {
+    background-color: var(--bg-card);
+    padding: 2.5rem;
+    border-radius: 12px;
+    margin-bottom: 3rem;
+    box-shadow: var(--shadow-soft);
+    border-top: 4px solid var(--accent-cta); /* Admin accent */
+  }
+  .admin-panel__title {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  .admin-panel .list-group-item {
+    border-color: var(--border-color);
+    border-radius: 8px !important; 
+    margin-bottom: 0.75rem;
+    padding: 0.9rem 1.2rem;
+    transition: all 0.2s ease-in-out;
+  }
+  .admin-panel .list-group-item:hover {
+    background-color: var(--bg-accent-light);
+    color: var(--accent-main);
+    border-left: 3px solid var(--accent-main);
+  }
+  .admin-panel .list-group-item i {
+    margin-right: 0.75rem;
+    color: var(--accent-main);
+    width: 18px;
+    text-align: center;
+  }
+
+  .closing-statement {
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    background-color: var(--bg-card);
+    border-radius: 12px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    box-shadow: var(--shadow-soft);
+    border-top: 3px solid var(--accent-secondary);
+  }
+  .closing-statement i {
+    color: var(--accent-secondary);
+    margin-right: 0.5rem;
+  }
+  
+  .decorative-line {
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 3.5rem auto;
+    width: 80%;
+  }
+</style>
+
+<div class="page-container my-0"> <!-- Removed my-5 to let hero touch top -->
+
+  <header class="hero-section">
+    <div class="page-container">
+      <h1 class="hero-section__title">Solucions <span class="highlight-text">Àgils</span> per a la Teva Comunitat</h1>
+      <p class="hero-section__subtitle">
+        Benvingut/da a la plataforma centralitzada de l'institut, dissenyada per a una gestió d'incidències transparent, ràpida i eficaç per a tothom.
+      </p>
+      <div class="hero-benefits">
+        <span class="hero-benefits__item"><i class="fas fa-bolt"></i> Resposta Ràpida</span>
+        <span class="hero-benefits__item"><i class="fas fa-eye"></i> Seguiment Clar</span>
+        <span class="hero-benefits__item"><i class="fas fa-users"></i> Per a Tothom</span>
+      </div>
+      <!-- Image could be placed here if desired, or kept lower down -->
+    </div>
+  </header>
+
+  <div class="page-container"> <!-- Main content wrapper -->
+
+    <section class="content-section">
+      <h2 class="section-title">El Nostre Procés Simplificat</h2>
+      <p class="section-subtitle">
+        Volem que reportar i seguir una incidència sigui el més senzill possible. Aquí t'expliquem com funciona el nostre sistema en pocs passos.
+      </p>
+      <div class="process-steps">
+        <p>
+          Des del moment que detectes una anomalia —ja sigui un equipament defectuós, una necessitat de manteniment o un problema amb els serveis digitals— la nostra plataforma et guia. Simplement crea un nou tiquet detallant la situació. Aquest tiquet s'assigna automàticament a l'equip corresponent, que iniciarà les accions per a resoldre-ho. Podràs consultar l'estat de la teva petició en qualsevol moment i rebràs notificacions sobre els avenços importants.
+        </p>
+      </div>
+      <img src="/Pedralbes.jpg" alt="Campus de l'institut Pedralbes" style="max-width: 100%; height: auto; border-radius: 12px; margin-top: 2rem; max-height: 380px; object-fit: cover; box-shadow: var(--shadow-medium);">
+    </section>
+
+    <hr class="decorative-line">
+
+    <section class="content-section">
+      <h2 class="section-title">Accions Principals</h2>
+      <p class="section-subtitle">Troba ràpidament el que necessites per gestionar o consultar incidències.</p>
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-card__header">
+            <i class="fas fa-plus-circle feature-card__icon"></i>
+            <h3 class="feature-card__title">Notificar una Nova Incidència</h3>
+          </div>
+          <p class="feature-card__description">Has detectat quelcom que requereix atenció? Fes-nos-ho saber aquí.</p>
+          <a href="/incidencies/new" class="feature-card__action"><i class="fas fa-edit me-2"></i>Obrir Tiquet Ara</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-card__header">
+            <i class="fas fa-clipboard-list feature-card__icon"></i>
+            <h3 class="feature-card__title">Consultar Tiquets</h3>
+          </div>
+          <p class="feature-card__description">Revisa l'estat dels teus tiquets o explora el llistat d'incidències actives.</p>
+          <a href="/incidencies" class="feature-card__action feature-card__action--secondary"><i class="fas fa-list-alt me-2"></i>Veure Llistat</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-card__header">
+            <i class="fas fa-user-cog feature-card__icon"></i>
+            <h3 class="feature-card__title">Portal per a Tècnics</h3>
+          </div>
+          <p class="feature-card__description">Accés exclusiu per al personal tècnic: gestió d'assignacions i registre d'actuacions.</p>
+          <a href="/actuacions/create" class="feature-card__action"><i class="fas fa-tools me-2"></i>Accedir al Portal</a>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-card__header">
+            <i class="fas fa-book-open feature-card__icon"></i>
+            <h3 class="feature-card__title">Base de Coneixement</h3>
+          </div>
+          <p class="feature-card__description">Consulta l'historial de solucions i actuacions prèvies del nostre equip.</p>
+          <a href="/actuacions" class="feature-card__action feature-card__action--secondary"><i class="fas fa-search me-2"></i>Explorar Resolucions</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="commitment-section">
+        <h2 class="section-title" style="margin-bottom: 1.5rem;">El Nostre Compromís</h2>
+        <ul>
+            <li>Millorar contínuament els temps de resposta i resolució.</li>
+            <li>Fomentar una comunicació clara i constant amb tots els usuaris.</li>
+            <li>Mantenir una plataforma intuïtiva i accessible per a tota la comunitat educativa.</li>
+            <li>Assegurar la transparència en la gestió de totes les incidències.</li>
+        </ul>
+    </section>
+
+    <% if (typeof user !== 'undefined' && user && user.rol === 'administrador') { %>
+      <hr class="decorative-line">
+      <section class="content-section">
+        <div class="admin-panel">
+            <h2 class="admin-panel__title"><i class="fas fa-shield-alt me-2"></i>Panell d'Administració</h2>
+            <div class="list-group">
+              <a href="/admin/logs" class="list-group-item list-group-item-action"><i class="fas fa-file-alt"></i>Revisió de Logs del Sistema</a>
+              <a href="/admin/logs/stats" class="list-group-item list-group-item-action"><i class="fas fa-chart-pie"></i>Estadístiques de la Plataforma</a>
+            </div>
+        </div>
+      </section>
+    <% } %>
+
+    <hr class="decorative-line">
+
+    <div class="closing-statement mb-5"> <!-- Added mb-5 for spacing before footer -->
+      <i class="fas fa-hands-helping"></i>La teva col·laboració és clau. Gràcies per ajudar-nos a mantenir l'institut funcionant de manera òptima!
+    </div>
+
+  </div> <!-- End main content wrapper -->
+</div>
+
+<%- include('partials/footer') %>

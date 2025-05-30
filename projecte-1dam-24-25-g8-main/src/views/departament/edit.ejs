@@ -1,0 +1,77 @@
+<%- include('../partials/header', { title: 'Editar Departament' }) %>
+
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-7 col-xl-6"> <!-- Columna una mica més estreta per a formularis simples -->
+
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0 text-dark" style="font-family: 'Poppins', sans-serif; font-weight: 600;">
+          <i class="fas fa-edit me-2 text-primary"></i>Editar Departament
+        </h1>
+        <a href="/departament" class="btn btn-sm btn-outline-secondary"> <!-- Assumint que /departament és la llista -->
+          <i class="fas fa-arrow-left me-1"></i>Tornar al Llistat
+        </a>
+      </div>
+
+      <div class="card border-0 shadow-lg" style="border-radius: 0.75rem;">
+        <div class="card-header bg-light border-bottom-0" style="border-top-left-radius: 0.75rem; border-top-right-radius: 0.75rem; padding: 1.25rem 1.5rem;">
+          <h5 class="mb-0 text-dark fw-normal">
+            <i class="fas fa-building me-2 text-muted"></i>Modifica el nom del departament
+          </h5>
+        </div>
+        <div class="card-body p-4 p-md-5">
+          <form action="/departament/<%= departament.id_departament %>/edit" method="POST" class="needs-validation" novalidate>
+            
+            <!-- Nom del Departament -->
+            <div class="mb-4"> <!-- Més espai inferior per a camps únics -->
+              <label for="nom" class="form-label fw-medium fs-5">Nom del Departament<span class="text-danger">*</span></label>
+              <input 
+                type="text" 
+                name="nom" 
+                id="nom" 
+                class="form-control form-control-lg" <!-- form-control-lg per a més presència -->
+                value="<%= typeof departament !== 'undefined' && departament.nom ? departament.nom : '' %>" 
+                required
+                placeholder="Ex: Departament de Ciències">
+              <div class="invalid-feedback">
+                El nom del departament és obligatori.
+              </div>
+            </div>
+
+            <!-- Botons -->
+            <hr class="my-4">
+            <div class="d-flex justify-content-end gap-2">
+              <a href="/departament" class="btn btn-outline-secondary btn-lg">
+                <i class="fas fa-times-circle me-2"></i>Cancel·lar
+              </a>
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-save me-2"></i>Actualitzar Departament
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Script per a la validació de Bootstrap (si no el tens ja al footer global) -->
+<script>
+  (function () {
+    'use strict'
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms)
+      .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+  })()
+</script>
+
+<%- include('../partials/footer') %>
